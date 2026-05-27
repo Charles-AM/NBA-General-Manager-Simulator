@@ -334,46 +334,57 @@ export default function RosterView({
                 return (
                   <div
                     key={player.id}
-                    className={`bg-[#12161a] border rounded-xl p-3.5 relative flex flex-col justify-between transition-all ${
-                      isInjured ? "border-red-900/40 bg-red-950/10" : "border-gray-800/80 hover:border-[#f55a15]/40"
+                    className={`bg-court-darkgray border rounded-xl p-3.5 relative flex flex-col justify-between transition-all ${
+                      isInjured ? "border-red-900/40 bg-red-950/10" : "border-court-border hover:border-[#f55a15]/40"
                     }`}
                   >
                     <div>
                       <div className="flex justify-between items-start">
-                        <span className="text-[9px] font-mono px-2 py-0.5 bg-gray-850 text-[#f55a15] font-semibold rounded uppercase">
+                        <span className="text-[9px] font-mono px-2 py-0.5 bg-court-gray text-[#f55a15] font-semibold rounded uppercase border border-court-border">
                           {player.position}
                         </span>
                         <div className="flex items-center gap-1">
                           {player.age && (
-                            <span className="text-[9px] bg-black/40 text-gray-400 font-mono px-1 rounded border border-gray-800" title="Physical Age">
+                            <span className="text-[9px] bg-court-gray text-court-text-secondary font-mono px-1 rounded border border-court-border" title="Physical Age">
                               {player.age}yr
                             </span>
                           )}
                           <button
                             onClick={() => onRemove(player.id, "starter")}
-                            className="text-gray-500 hover:text-red-500 transition-colors p-1 rounded hover:bg-red-950/25 cursor-pointer"
+                            className="text-court-text-tertiary hover:text-red-500 transition-colors p-1 rounded hover:bg-red-950/25 cursor-pointer"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       </div>
 
-                      <h4 className="text-sm font-display font-black text-white mt-3 truncate">{player.name}</h4>
-                      <div className="flex justify-between items-center text-[10px] text-gray-400 font-mono mt-0.5 uppercase tracking-wide">
-                        <span>{player.team}</span>
-                        <span className="text-amber-500">{player.era}</span>
+                      {/* DiceBear Portrait Avatar */}
+                      <div className="flex items-center gap-2.5 mt-3">
+                        <img 
+                          src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(player.name)}`} 
+                          alt={player.name} 
+                          className="w-10 h-10 rounded-full bg-court-gray border border-court-border"
+                          referrerPolicy="no-referrer"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <h4 className="text-sm font-display font-black text-court-text-primary truncate">{player.name}</h4>
+                          <div className="flex justify-between items-center text-[10px] text-court-text-secondary font-mono mt-0.5 uppercase tracking-wide">
+                            <span>{player.team}</span>
+                            <span className="text-amber-600 font-bold">{player.era}</span>
+                          </div>
+                        </div>
                       </div>
 
                       {/* Physical stamina stats */}
                       {player.stamina !== undefined && (
                         <div className="mt-2.5 space-y-1">
-                          <div className="flex justify-between text-[8px] font-mono text-gray-400">
+                          <div className="flex justify-between text-[8px] font-mono text-court-text-secondary">
                             <span>Stamina Status</span>
                             <span className={player.stamina < 30 ? "text-red-400 font-bold" : player.stamina < 70 ? "text-yellow-400 font-bold" : "text-emerald-400 font-bold"}>
                               {player.stamina}%
                             </span>
                           </div>
-                          <div className="w-full h-1 bg-black rounded-full overflow-hidden border border-gray-900">
+                          <div className="w-full h-1 bg-court-black rounded-full overflow-hidden border border-court-border">
                             <div
                               className={`h-full transition-all duration-300 ${
                                 player.stamina < 30 ? "bg-red-500" : player.stamina < 70 ? "bg-yellow-500" : "bg-emerald-500"
@@ -391,21 +402,21 @@ export default function RosterView({
                       )}
                     </div>
 
-                    <div className="grid grid-cols-4 gap-1 bg-black text-center rounded-lg p-2 mt-4 text-[10px] font-mono border border-gray-900">
+                    <div className="grid grid-cols-4 gap-1 bg-court-gray text-center rounded-lg p-2 mt-4 text-[10px] font-mono border border-court-border">
                       <div>
-                        <span className="text-[8px] text-gray-500 block">PTS</span>
-                        <b className="text-white font-display text-[11px] block">{player.ppg.toFixed(1)}</b>
+                        <span className="text-[8px] text-court-text-tertiary block">PTS</span>
+                        <b className="text-court-text-primary font-display text-[11px] block">{player.ppg.toFixed(1)}</b>
                       </div>
                       <div>
-                        <span className="text-[8px] text-gray-500 block">AST</span>
-                        <b className="text-white font-display text-[11px] block">{player.apg.toFixed(1)}</b>
+                        <span className="text-[8px] text-court-text-tertiary block">AST</span>
+                        <b className="text-court-text-primary font-display text-[11px] block">{player.apg.toFixed(1)}</b>
                       </div>
                       <div>
-                        <span className="text-[8px] text-gray-500 block">REB</span>
-                        <b className="text-white font-display text-[11px] block">{player.rpg.toFixed(1)}</b>
+                        <span className="text-[8px] text-court-text-tertiary block">REB</span>
+                        <b className="text-court-text-primary font-display text-[11px] block">{player.rpg.toFixed(1)}</b>
                       </div>
                       <div>
-                        <span className="text-[8px] text-gray-500 block">OVR</span>
+                        <span className="text-[8px] text-court-text-tertiary block">OVR</span>
                         <b className="text-[#f55a15] font-display text-[11px] block">{player.overallRating || 75}</b>
                       </div>
                     </div>
@@ -437,37 +448,49 @@ export default function RosterView({
                 return (
                   <div
                     key={player.id}
-                    className={`bg-[#12161a] border rounded-xl p-3.5 relative flex flex-col justify-between transition-all ${
-                      isInjured ? "border-red-900/40 bg-red-950/10" : "border-gray-800/80 hover:border-blue-500/30"
+                    className={`bg-court-darkgray border rounded-xl p-3.5 relative flex flex-col justify-between transition-all ${
+                      isInjured ? "border-red-900/40 bg-red-950/10" : "border-court-border hover:border-blue-500/30"
                     }`}
                   >
                     <div className="flex justify-between items-start">
-                      <div>
+                      <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <span className="text-[9px] font-mono px-2 py-0.5 bg-gray-850 text-blue-400 font-semibold rounded uppercase">
+                          <span className="text-[9px] font-mono px-2 py-0.5 bg-court-gray text-blue-400 font-semibold rounded uppercase border border-court-border">
                             {player.position}
                           </span>
                           {player.age && (
-                            <span className="text-[9px] bg-black/45 text-gray-400 font-mono px-1 rounded border border-gray-800">
+                            <span className="text-[9px] bg-court-gray text-court-text-secondary font-mono px-1 rounded border border-court-border">
                               {player.age}yr
                             </span>
                           )}
                         </div>
-                        <h4 className="text-sm font-display font-black text-white mt-2.5 truncate">{player.name}</h4>
-                        <p className="text-[10px] text-gray-400 font-mono mt-0.5">
-                          Team: {player.team} • Era: <span className="text-amber-500">{player.era}</span>
-                        </p>
+
+                        {/* DiceBear Portrait Avatar */}
+                        <div className="flex items-center gap-2.5 mt-2.5">
+                          <img 
+                            src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(player.name)}`} 
+                            alt={player.name} 
+                            className="w-10 h-10 rounded-full bg-court-gray border border-court-border"
+                            referrerPolicy="no-referrer"
+                          />
+                          <div className="min-w-0 flex-1">
+                            <h4 className="text-sm font-display font-black text-court-text-primary truncate">{player.name}</h4>
+                            <p className="text-[10px] text-court-text-secondary font-mono mt-0.5">
+                              Team: {player.team} • Era: <span className="text-amber-600 font-bold">{player.era}</span>
+                            </p>
+                          </div>
+                        </div>
 
                         {/* Physical stamina stats */}
                         {player.stamina !== undefined && (
                           <div className="mt-2 space-y-1">
-                            <div className="flex justify-between text-[8px] font-mono text-gray-400">
+                            <div className="flex justify-between text-[8px] font-mono text-court-text-secondary">
                               <span>Stamina Status</span>
                               <span className={player.stamina < 30 ? "text-red-400 font-bold" : player.stamina < 70 ? "text-yellow-400 font-bold" : "text-emerald-400 font-bold"}>
                                 {player.stamina}%
                               </span>
                             </div>
-                            <div className="w-full h-1 bg-black rounded-full overflow-hidden border border-gray-901">
+                            <div className="w-full h-1 bg-court-black rounded-full overflow-hidden border border-court-border">
                               <div
                                 className={`h-full transition-all duration-300 ${
                                   player.stamina < 30 ? "bg-red-500" : player.stamina < 70 ? "bg-yellow-500" : "bg-emerald-500"
@@ -487,28 +510,28 @@ export default function RosterView({
                       
                       <button
                         onClick={() => onRemove(player.id, "bench")}
-                        className="text-gray-500 hover:text-red-500 transition-colors p-1 rounded hover:bg-red-950/25 shrink-0 cursor-pointer"
+                        className="text-court-text-tertiary hover:text-red-500 transition-colors p-1 rounded hover:bg-red-950/25 shrink-0 cursor-pointer"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
 
-                    <div className="grid grid-cols-4 gap-1 bg-black text-center rounded-lg p-2 mt-4 text-[10px] font-mono border border-gray-900">
+                    <div className="grid grid-cols-4 gap-1 bg-court-gray text-center rounded-lg p-2 mt-4 text-[10px] font-mono border border-court-border">
                       <div>
-                        <span className="text-[8px] text-gray-500 block">PTS</span>
-                        <b className="text-white font-display text-[11px] block">{player.ppg.toFixed(1)}</b>
+                        <span className="text-[8px] text-court-text-tertiary block">PTS</span>
+                        <b className="text-court-text-primary font-display text-[11px] block">{player.ppg.toFixed(1)}</b>
                       </div>
                       <div>
-                        <span className="text-[8px] text-gray-500 block">AST</span>
-                        <b className="text-white font-display text-[11px] block">{player.apg.toFixed(1)}</b>
+                        <span className="text-[8px] text-court-text-tertiary block">AST</span>
+                        <b className="text-court-text-primary font-display text-[11px] block">{player.apg.toFixed(1)}</b>
                       </div>
                       <div>
-                        <span className="text-[8px] text-gray-500 block">REB</span>
-                        <b className="text-white font-display text-[11px] block">{player.rpg.toFixed(1)}</b>
+                        <span className="text-[8px] text-court-text-tertiary block">REB</span>
+                        <b className="text-court-text-primary font-display text-[11px] block">{player.rpg.toFixed(1)}</b>
                       </div>
                       <div>
-                        <span className="text-[8px] text-gray-500 block">OVR</span>
-                        <b className="text-blue-400 font-display text-[11px] block">{player.overallRating || 75}</b>
+                        <span className="text-[8px] text-court-text-tertiary block">OVR</span>
+                        <b className="text-blue-500 font-display text-[11px] block">{player.overallRating || 75}</b>
                       </div>
                     </div>
                   </div>
@@ -618,29 +641,40 @@ export default function RosterView({
                 key={p.id}
                 className={`border rounded-xl p-3.5 flex flex-col justify-between transition-all ${borderAccent} ${
                   alreadyInRoster 
-                    ? "bg-[#0c0f12]/30 border-gray-905 text-gray-600 pointer-events-none opacity-[0.25]" 
-                    : "bg-[#1b2026] text-white"
+                    ? "bg-court-black/30 border-court-border text-court-text-tertiary pointer-events-none opacity-[0.25]" 
+                    : "bg-court-darkgray text-court-text-primary"
                 }`}
               >
                 <div>
                   <div className="flex justify-between items-center text-[10px] font-mono">
                     <span className={`text-[9px] px-1.5 py-0.5 font-semibold rounded uppercase ${
-                      p.tier === "Legendary" ? "bg-red-500/10 text-red-400" :
-                      p.tier === "Gold" ? "bg-yellow-500/10 text-yellow-400" :
-                      p.tier === "Silver" ? "bg-slate-500/10 text-slate-400" : "bg-amber-500/10 text-[#f55a15]"
+                      p.tier === "Legendary" ? "bg-red-500/10 text-red-500 font-bold" :
+                      p.tier === "Gold" ? "bg-yellow-500/10 text-yellow-600 font-bold" :
+                      p.tier === "Silver" ? "bg-slate-500/10 text-slate-600" : "bg-amber-500/10 text-amber-700"
                     }`}>
                       {p.tier}: {p.position}
                     </span>
-                    <span className="text-gray-400 uppercase tracking-widest">{p.team}</span>
+                    <span className="text-court-text-secondary uppercase tracking-widest">{p.team}</span>
                   </div>
                   
-                  <h4 className="text-xs font-display font-bold text-white mt-1.5 truncate">{p.name}</h4>
-                  <div className="flex justify-between items-center mt-1 text-[9px] font-mono text-gray-400">
-                    <span>OVR Rating: <strong className="text-white">{matchedCard ? matchedCard.overallRating : p.overallRating}</strong></span>
-                    <span className="text-amber-500 font-semibold">{p.era}</span>
+                  {/* DiceBear Portrait Avatar */}
+                  <div className="flex items-center gap-2.5 mt-2">
+                    <img 
+                      src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(p.name)}`} 
+                      alt={p.name} 
+                      className="w-10 h-10 rounded-full bg-court-gray border border-court-border"
+                      referrerPolicy="no-referrer"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <h4 className="text-xs font-display font-bold text-court-text-primary truncate">{p.name}</h4>
+                      <div className="flex justify-between items-center mt-0.5 text-[9px] font-mono text-court-text-secondary">
+                        <span>OVR Rating: <strong className="text-court-text-primary">{matchedCard ? matchedCard.overallRating : p.overallRating}</strong></span>
+                        <span className="text-amber-600 font-bold">{p.era}</span>
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="text-[9px] font-mono text-gray-500 mt-1 flex justify-between items-center border-t border-gray-850/60 pt-1.5">
+                  <div className="text-[9px] font-mono text-court-text-tertiary mt-2 flex justify-between items-center border-t border-court-border pt-1.5">
                     <span>Physical Age: <strong>{cardAgeValue}yr</strong></span>
                     {stamValue !== undefined && (
                       <span className={stamValue < 30 ? "text-red-400 font-bold" : stamValue < 70 ? "text-yellow-400 font-bold" : "text-emerald-400 font-bold"}>

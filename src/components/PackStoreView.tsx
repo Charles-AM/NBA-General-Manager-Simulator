@@ -269,41 +269,47 @@ export default function PackStoreView({
                       initial={{ scale: 0.3, rotateY: 180, opacity: 0 }}
                       animate={{ scale: 1, rotateY: 0, opacity: 1 }}
                       transition={{ delay: i * 0.15, duration: 0.5, type: "spring" }}
-                      className={`w-44 h-64 bg-[#12161a] border-2 ${borderGlow} rounded-2xl p-4 flex flex-col justify-between relative shadow-2xl shrink-0`}
+                      className={`w-44 h-64 bg-court-darkgray border-2 ${borderGlow} rounded-2xl p-4 flex flex-col justify-between relative shadow-2xl shrink-0 text-court-text-primary`}
                     >
                       <div className="flex justify-between items-start font-mono text-[9px]">
-                        <span className={`px-1.5 py-0.5 rounded font-black uppercase ${
+                        <span className={`px-1.5 py-0.5 rounded font-black uppercase border border-court-border ${
                           p.tier === "Legendary" ? "bg-red-500/10 text-red-400" :
                           p.tier === "Gold" ? "bg-yellow-500/10 text-yellow-400" :
                           p.tier === "Silver" ? "bg-slate-500/10 text-slate-400" : "bg-amber-500/10 text-amber-500"
                         }`}>
                           {p.position}
                         </span>
-                        <span className="text-gray-400">{p.team}</span>
+                        <span className="text-court-text-secondary">{p.team}</span>
                       </div>
 
-                      <div className="text-center my-auto space-y-1">
+                      <div className="text-center my-auto space-y-1 flex flex-col items-center">
+                        <img 
+                          src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(p.name)}`} 
+                          alt={p.name} 
+                          className="w-12 h-12 rounded-full bg-court-gray border border-court-border mb-1"
+                          referrerPolicy="no-referrer"
+                        />
                         <span className={`text-[10px] font-mono tracking-widest uppercase block ${textGradient}`}>
                           {p.tier}
                         </span>
-                        <h4 className="text-sm font-display font-extrabold text-white leading-tight">{p.name}</h4>
-                        <p className="text-[10px] text-gray-500 font-mono">{p.era}</p>
+                        <h4 className="text-sm font-display font-extrabold text-court-text-primary leading-tight truncate max-w-full">{p.name}</h4>
+                        <p className="text-[10px] text-court-text-secondary font-mono">{p.era}</p>
                       </div>
 
-                      <div className="bg-black/60 rounded-xl py-1.5 px-2 text-center border border-gray-900 flex justify-between items-center text-[10px] font-mono">
+                      <div className="bg-court-gray rounded-xl py-1.5 px-2 text-center border border-court-border flex justify-between items-center text-[10px] font-mono">
                         <div>
-                          <span className="text-[8px] text-gray-500 block">OVR</span>
-                          <strong className="text-white text-xs font-display">{p.overallRating || 75}</strong>
+                          <span className="text-[8px] text-court-text-secondary block">OVR</span>
+                          <strong className="text-court-text-primary text-xs font-display">{p.overallRating || 75}</strong>
                         </div>
-                        <div className="h-4 w-px bg-gray-800" />
+                        <div className="h-4 w-px bg-court-border" />
                         <div>
-                          <span className="text-[8px] text-gray-500 block">PPG</span>
-                          <strong className="text-gray-400">{p.ppg.toFixed(0)}</strong>
+                          <span className="text-[8px] text-court-text-secondary block">PPG</span>
+                          <strong className="text-court-text-primary">{p.ppg.toFixed(0)}</strong>
                         </div>
-                        <div className="h-4 w-px bg-gray-800" />
+                        <div className="h-4 w-px bg-court-border" />
                         <div>
-                          <span className="text-[8px] text-gray-500 block">FG%</span>
-                          <strong className="text-gray-400">{(p.fgPercent || 48)}%</strong>
+                          <span className="text-[8px] text-court-text-secondary block">FG%</span>
+                          <strong className="text-court-text-primary">{(p.fgPercent || 48)}%</strong>
                         </div>
                       </div>
                     </motion.div>
@@ -546,40 +552,51 @@ export default function PackStoreView({
 
                 const textClass = 
                   card.tier === "Legendary" ? "text-red-500 font-bold" : 
-                  card.tier === "Gold" ? "text-yellow-400" : 
-                  card.tier === "Silver" ? "text-slate-300" : "text-amber-600";
+                  card.tier === "Gold" ? "text-yellow-600 font-bold" : 
+                  card.tier === "Silver" ? "text-slate-500" : "text-amber-600";
                 
                 return (
                   <div
                     key={card.cardId || `${card.id}_${idx}`}
-                    className={`bg-[#12161a] border ${borderClass} rounded-xl p-3 flex flex-col justify-between text-xs space-y-3.5 hover:border-gray-500`}
+                    className={`bg-court-darkgray border ${borderClass} border-court-border rounded-xl p-3 flex flex-col justify-between text-xs space-y-3 hover:border-gray-500`}
                   >
                     <div>
                       <div className="flex justify-between items-center text-[8px] font-mono mb-1.5">
-                        <span className={`px-1.5 py-0.5 rounded ${
-                          card.tier === "Legendary" ? "bg-red-500/10 text-red-00" :
-                          card.tier === "Gold" ? "bg-yellow-500/10 text-yellow-500" :
-                          card.tier === "Silver" ? "bg-slate-500/10" : "bg-amber-500/10"
+                        <span className={`px-1.5 py-0.5 rounded border border-court-border font-bold ${
+                          card.tier === "Legendary" ? "bg-red-500/10 text-red-500" :
+                          card.tier === "Gold" ? "bg-yellow-500/10 text-yellow-600" :
+                          card.tier === "Silver" ? "bg-slate-500/10 text-slate-500" : "bg-amber-500/10 text-amber-600"
                         }`}>
                           {card.position}
                         </span>
-                        <span className="text-gray-500">{card.team}</span>
+                        <span className="text-court-text-secondary">{card.team}</span>
                       </div>
-                      <h4 className="font-display font-bold text-white truncate leading-tight">{card.name}</h4>
-                      <p className={`text-[9px] font-mono ${textClass} mt-0.5`}>{card.tier}</p>
+
+                      <div className="flex items-center gap-2 mt-1.5 mb-2">
+                        <img 
+                          src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(card.name)}`} 
+                          alt={card.name} 
+                          className="w-8 h-8 rounded-full bg-court-gray border border-court-border"
+                          referrerPolicy="no-referrer"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <h4 className="font-display font-bold text-court-text-primary truncate leading-tight">{card.name}</h4>
+                          <p className={`text-[9px] font-mono ${textClass} mt-0.5`}>{card.tier}</p>
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="bg-black/40 rounded-lg p-1 text-center font-mono text-[9px] border border-gray-900 flex justify-between">
+                    <div className="bg-court-gray rounded-lg p-1 text-center font-mono text-[9px] border border-court-border flex justify-between">
                       <div>
-                        <span className="text-[7px] text-gray-500 block">OVR</span>
-                        <strong className="text-white font-display">{card.overallRating}</strong>
+                        <span className="text-[7px] text-court-text-secondary block">OVR</span>
+                        <strong className="text-court-text-primary font-display">{card.overallRating}</strong>
                       </div>
                       <div>
-                        <span className="text-[7px] text-gray-500 block">PPG</span>
-                        <strong className="text-gray-400">{card.ppg.toFixed(0)}</strong>
+                        <span className="text-[7px] text-court-text-secondary block">PPG</span>
+                        <strong className="text-court-text-primary">{card.ppg.toFixed(0)}</strong>
                       </div>
                       <div>
-                        <span className="text-[7px] text-gray-500 block">FG%</span>
+                        <span className="text-[7px] text-court-text-secondary block">FG%</span>
                         <strong className="text-[#f55a15]">{(card.fgPercent || 48)}%</strong>
                       </div>
                     </div>

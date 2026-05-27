@@ -5,18 +5,825 @@ export interface PoolPlayer extends Player {
 }
 
 const RAW_PRELOADED_PLAYERS = [
-  // ================= 1980s =================
+  // ================= CURRENT NBA SUPERSTARS (2025-2026) =================
+  {
+    id: "lebron-james",
+    name: "LeBron James",
+    era: "Current",
+    team: "LAL",
+    position: "Small Forward",
+    ppg: 27.2,
+    apg: 7.4,
+    rpg: 7.5,
+    fgPercent: 50,
+    tier: "Legendary",
+    overallRating: 97,
+    isActive: true
+  },
+  {
+    id: "stephen-curry",
+    name: "Stephen Curry",
+    era: "Current",
+    team: "GSW",
+    position: "Point Guard",
+    ppg: 24.8,
+    apg: 6.4,
+    rpg: 4.7,
+    fgPercent: 47,
+    tier: "Legendary",
+    overallRating: 96,
+    isActive: true
+  },
+  {
+    id: "kevin-durant",
+    name: "Kevin Durant",
+    era: "Current",
+    team: "PHX",
+    position: "Small Forward",
+    ppg: 27.3,
+    apg: 4.4,
+    rpg: 7.0,
+    fgPercent: 50,
+    tier: "Legendary",
+    overallRating: 96,
+    isActive: true
+  },
+  {
+    id: "giannis-antetokounmpo",
+    name: "Giannis Antetokounmpo",
+    era: "Current",
+    team: "MIL",
+    position: "Power Forward",
+    ppg: 31.0,
+    apg: 6.2,
+    rpg: 12.3,
+    fgPercent: 61,
+    tier: "Legendary",
+    overallRating: 97,
+    isActive: true
+  },
+  {
+    id: "luka-doncic",
+    name: "Luka Dončić",
+    era: "Current",
+    team: "DAL",
+    position: "Point Guard",
+    ppg: 28.5,
+    apg: 9.2,
+    rpg: 8.1,
+    fgPercent: 48,
+    tier: "Legendary",
+    overallRating: 96,
+    isActive: true
+  },
+  {
+    id: "nikola-jokic",
+    name: "Nikola Jokić",
+    era: "Current",
+    team: "DEN",
+    position: "Center",
+    ppg: 29.7,
+    apg: 10.3,
+    rpg: 13.7,
+    fgPercent: 58,
+    tier: "Legendary",
+    overallRating: 98,
+    isActive: true
+  },
+  {
+    id: "joel-embiid",
+    name: "Joel Embiid",
+    era: "Current",
+    team: "PHI",
+    position: "Center",
+    ppg: 33.0,
+    apg: 4.2,
+    rpg: 10.2,
+    fgPercent: 51,
+    tier: "Legendary",
+    overallRating: 96,
+    isActive: true
+  },
+  {
+    id: "shai-gilgeous-alexander",
+    name: "Shai Gilgeous-Alexander",
+    era: "Current",
+    team: "OKC",
+    position: "Point Guard",
+    ppg: 30.1,
+    apg: 6.4,
+    rpg: 5.5,
+    fgPercent: 53,
+    tier: "Legendary",
+    overallRating: 95,
+    isActive: true
+  },
+  {
+    id: "jayson-tatum",
+    name: "Jayson Tatum",
+    era: "Current",
+    team: "BOS",
+    position: "Small Forward",
+    ppg: 27.0,
+    apg: 4.8,
+    rpg: 8.2,
+    fgPercent: 47,
+    tier: "Gold",
+    overallRating: 94,
+    isActive: true
+  },
+  {
+    id: "anthony-davis",
+    name: "Anthony Davis",
+    era: "Current",
+    team: "LAL",
+    position: "Power Forward",
+    ppg: 24.0,
+    apg: 2.5,
+    rpg: 10.4,
+    fgPercent: 53,
+    tier: "Gold",
+    overallRating: 94,
+    isActive: true
+  },
+  {
+    id: "victor-wembanyama",
+    name: "Victor Wembanyama",
+    era: "Current",
+    team: "SAS",
+    position: "Center",
+    ppg: 21.4,
+    apg: 3.9,
+    rpg: 10.6,
+    fgPercent: 46,
+    tier: "Gold",
+    overallRating: 93,
+    isActive: true
+  },
+  {
+    id: "anthony-edwards",
+    name: "Anthony Edwards",
+    era: "Current",
+    team: "MIN",
+    position: "Shooting Guard",
+    ppg: 25.9,
+    apg: 5.1,
+    rpg: 5.4,
+    fgPercent: 46,
+    tier: "Gold",
+    overallRating: 93,
+    isActive: true
+  },
+  {
+    id: "tyrese-haliburton",
+    name: "Tyrese Haliburton",
+    era: "Current",
+    team: "IND",
+    position: "Point Guard",
+    ppg: 20.1,
+    apg: 10.9,
+    rpg: 3.9,
+    fgPercent: 48,
+    tier: "Gold",
+    overallRating: 91,
+    isActive: true
+  },
+  {
+    id: "donovan-mitchell",
+    name: "Donovan Mitchell",
+    era: "Current",
+    team: "CLE",
+    position: "Shooting Guard",
+    ppg: 26.6,
+    apg: 6.1,
+    rpg: 5.1,
+    fgPercent: 46,
+    tier: "Gold",
+    overallRating: 92,
+    isActive: true
+  },
+  {
+    id: "devin-booker",
+    name: "Devin Booker",
+    era: "Current",
+    team: "PHX",
+    position: "Shooting Guard",
+    ppg: 27.1,
+    apg: 6.9,
+    rpg: 4.5,
+    fgPercent: 48,
+    tier: "Gold",
+    overallRating: 92,
+    isActive: true
+  },
+  {
+    id: "ja-morant",
+    name: "Ja Morant",
+    era: "Current",
+    team: "MEM",
+    position: "Point Guard",
+    ppg: 26.2,
+    apg: 8.1,
+    rpg: 5.9,
+    fgPercent: 47,
+    tier: "Gold",
+    overallRating: 91,
+    isActive: true
+  },
+  {
+    id: "zion-williamson",
+    name: "Zion Williamson",
+    era: "Current",
+    team: "NOP",
+    position: "Power Forward",
+    ppg: 26.0,
+    apg: 4.6,
+    rpg: 7.0,
+    fgPercent: 58,
+    tier: "Gold",
+    overallRating: 90,
+    isActive: true
+  },
+  {
+    id: "bam-adebayo",
+    name: "Bam Adebayo",
+    era: "Current",
+    team: "MIA",
+    position: "Center",
+    ppg: 19.3,
+    apg: 3.9,
+    rpg: 10.4,
+    fgPercent: 52,
+    tier: "Gold",
+    overallRating: 89,
+    isActive: true
+  },
+  {
+    id: "paolo-banchero",
+    name: "Paolo Banchero",
+    era: "Current",
+    team: "ORL",
+    position: "Power Forward",
+    ppg: 22.6,
+    apg: 5.4,
+    rpg: 6.9,
+    fgPercent: 45,
+    tier: "Gold",
+    overallRating: 89,
+    isActive: true
+  },
+  {
+    id: "chet-holmgren",
+    name: "Chet Holmgren",
+    era: "Current",
+    team: "OKC",
+    position: "Center",
+    ppg: 16.5,
+    apg: 2.4,
+    rpg: 7.9,
+    fgPercent: 53,
+    tier: "Silver",
+    overallRating: 88,
+    isActive: true
+  },
+
+  // ================= LEGENDS - 2010s ERA =================
+  {
+    id: "kobe-bryant",
+    name: "Kobe Bryant",
+    era: "2010s",
+    team: "LAL",
+    position: "Shooting Guard",
+    ppg: 27.0,
+    apg: 4.6,
+    rpg: 5.4,
+    fgPercent: 45,
+    tier: "Legendary",
+    overallRating: 98,
+    isActive: false
+  },
+  {
+    id: "tim-duncan",
+    name: "Tim Duncan",
+    era: "2010s",
+    team: "SAS",
+    position: "Power Forward",
+    ppg: 20.0,
+    apg: 3.2,
+    rpg: 11.5,
+    fgPercent: 50,
+    tier: "Legendary",
+    overallRating: 97,
+    isActive: false
+  },
+  {
+    id: "dirk-nowitzki",
+    name: "Dirk Nowitzki",
+    era: "2010s",
+    team: "DAL",
+    position: "Power Forward",
+    ppg: 25.0,
+    apg: 2.5,
+    rpg: 8.0,
+    fgPercent: 47,
+    tier: "Legendary",
+    overallRating: 96,
+    isActive: false
+  },
+  {
+    id: "dwyane-wade",
+    name: "Dwyane Wade",
+    era: "2010s",
+    team: "MIA",
+    position: "Shooting Guard",
+    ppg: 26.0,
+    apg: 6.0,
+    rpg: 5.0,
+    fgPercent: 48,
+    tier: "Legendary",
+    overallRating: 95,
+    isActive: false
+  },
+  {
+    id: "kevin-garnett",
+    name: "Kevin Garnett",
+    era: "2010s",
+    team: "BOS",
+    position: "Power Forward",
+    ppg: 20.0,
+    apg: 4.0,
+    rpg: 11.0,
+    fgPercent: 50,
+    tier: "Legendary",
+    overallRating: 96,
+    isActive: false
+  },
+  {
+    id: "chris-paul",
+    name: "Chris Paul",
+    era: "2010s",
+    team: "LAC",
+    position: "Point Guard",
+    ppg: 18.5,
+    apg: 9.5,
+    rpg: 4.2,
+    fgPercent: 47,
+    tier: "Gold",
+    overallRating: 94,
+    isActive: false
+  },
+  {
+    id: "carmelo-anthony",
+    name: "Carmelo Anthony",
+    era: "2010s",
+    team: "NYK",
+    position: "Small Forward",
+    ppg: 26.0,
+    apg: 3.0,
+    rpg: 7.0,
+    fgPercent: 45,
+    tier: "Gold",
+    overallRating: 93,
+    isActive: false
+  },
+  {
+    id: "dwight-howard",
+    name: "Dwight Howard",
+    era: "2010s",
+    team: "ORL",
+    position: "Center",
+    ppg: 20.0,
+    apg: 1.5,
+    rpg: 13.5,
+    fgPercent: 57,
+    tier: "Gold",
+    overallRating: 92,
+    isActive: false
+  },
+  {
+    id: "derrick-rose",
+    name: "Derrick Rose",
+    era: "2010s",
+    team: "CHI",
+    position: "Point Guard",
+    ppg: 25.0,
+    apg: 7.7,
+    rpg: 4.1,
+    fgPercent: 45,
+    tier: "Legendary",
+    overallRating: 95,
+    isActive: false
+  },
+  {
+    id: "russell-westbrook",
+    name: "Russell Westbrook",
+    era: "2010s",
+    team: "OKC",
+    position: "Point Guard",
+    ppg: 27.0,
+    apg: 10.0,
+    rpg: 8.0,
+    fgPercent: 44,
+    tier: "Legendary",
+    overallRating: 95,
+    isActive: false
+  },
+  {
+    id: "james-harden",
+    name: "James Harden",
+    era: "2010s",
+    team: "HOU",
+    position: "Shooting Guard",
+    ppg: 29.0,
+    apg: 8.0,
+    rpg: 6.0,
+    fgPercent: 44,
+    tier: "Legendary",
+    overallRating: 96,
+    isActive: false
+  },
+  {
+    id: "kawhi-leonard",
+    name: "Kawhi Leonard",
+    era: "2010s",
+    team: "SAS",
+    position: "Small Forward",
+    ppg: 25.5,
+    apg: 3.5,
+    rpg: 6.5,
+    fgPercent: 49,
+    tier: "Legendary",
+    overallRating: 95,
+    isActive: false
+  },
+  {
+    id: "paul-george",
+    name: "Paul George",
+    era: "2010s",
+    team: "IND",
+    position: "Small Forward",
+    ppg: 23.0,
+    apg: 3.5,
+    rpg: 6.5,
+    fgPercent: 44,
+    tier: "Gold",
+    overallRating: 92,
+    isActive: false
+  },
+  {
+    id: "damian-lillard",
+    name: "Damian Lillard",
+    era: "2010s",
+    team: "POR",
+    position: "Point Guard",
+    ppg: 26.0,
+    apg: 6.5,
+    rpg: 4.2,
+    fgPercent: 44,
+    tier: "Gold",
+    overallRating: 93,
+    isActive: false
+  },
+  {
+    id: "kyrie-irving",
+    name: "Kyrie Irving",
+    era: "2010s",
+    team: "CLE",
+    position: "Point Guard",
+    ppg: 24.0,
+    apg: 5.5,
+    rpg: 3.8,
+    fgPercent: 47,
+    tier: "Gold",
+    overallRating: 94,
+    isActive: false
+  },
+
+  // ================= LEGENDS - 2000s ERA =================
+  {
+    id: "shaquille-oneal",
+    name: "Shaquille O'Neal",
+    era: "2000s",
+    team: "LAL",
+    position: "Center",
+    ppg: 27.0,
+    apg: 3.5,
+    rpg: 11.5,
+    fgPercent: 58,
+    tier: "Legendary",
+    overallRating: 99,
+    isActive: false
+  },
+  {
+    id: "allen-iverson",
+    name: "Allen Iverson",
+    era: "2000s",
+    team: "PHI",
+    position: "Shooting Guard",
+    ppg: 27.5,
+    apg: 6.0,
+    rpg: 3.8,
+    fgPercent: 42,
+    tier: "Legendary",
+    overallRating: 96,
+    isActive: false
+  },
+  {
+    id: "tracy-mcgrady",
+    name: "Tracy McGrady",
+    era: "2000s",
+    team: "HOU",
+    position: "Shooting Guard",
+    ppg: 26.5,
+    apg: 4.8,
+    rpg: 6.0,
+    fgPercent: 44,
+    tier: "Legendary",
+    overallRating: 95,
+    isActive: false
+  },
+  {
+    id: "vince-carter",
+    name: "Vince Carter",
+    era: "2000s",
+    team: "TOR",
+    position: "Shooting Guard",
+    ppg: 24.5,
+    apg: 4.0,
+    rpg: 5.5,
+    fgPercent: 45,
+    tier: "Gold",
+    overallRating: 94,
+    isActive: false
+  },
+  {
+    id: "jason-kidd",
+    name: "Jason Kidd",
+    era: "2000s",
+    team: "NJN",
+    position: "Point Guard",
+    ppg: 14.5,
+    apg: 9.0,
+    rpg: 6.5,
+    fgPercent: 41,
+    tier: "Gold",
+    overallRating: 94,
+    isActive: false
+  },
+  {
+    id: "steve-nash",
+    name: "Steve Nash",
+    era: "2000s",
+    team: "PHX",
+    position: "Point Guard",
+    ppg: 16.5,
+    apg: 10.5,
+    rpg: 3.0,
+    fgPercent: 49,
+    tier: "Legendary",
+    overallRating: 95,
+    isActive: false
+  },
+  {
+    id: "ray-allen",
+    name: "Ray Allen",
+    era: "2000s",
+    team: "BOS",
+    position: "Shooting Guard",
+    ppg: 20.0,
+    apg: 3.5,
+    rpg: 4.0,
+    fgPercent: 45,
+    tier: "Gold",
+    overallRating: 93,
+    isActive: false
+  },
+  {
+    id: "paul-pierce",
+    name: "Paul Pierce",
+    era: "2000s",
+    team: "BOS",
+    position: "Small Forward",
+    ppg: 22.0,
+    apg: 3.8,
+    rpg: 6.0,
+    fgPercent: 45,
+    tier: "Gold",
+    overallRating: 93,
+    isActive: false
+  },
+  {
+    id: "ben-wallace",
+    name: "Ben Wallace",
+    era: "2000s",
+    team: "DET",
+    position: "Center",
+    ppg: 6.0,
+    apg: 1.5,
+    rpg: 12.0,
+    fgPercent: 47,
+    tier: "Gold",
+    overallRating: 93,
+    isActive: false
+  },
+  {
+    id: "chauncey-billups",
+    name: "Chauncey Billups",
+    era: "2000s",
+    team: "DET",
+    position: "Point Guard",
+    ppg: 18.0,
+    apg: 6.0,
+    rpg: 3.0,
+    fgPercent: 42,
+    tier: "Gold",
+    overallRating: 92,
+    isActive: false
+  },
+
+  // ================= LEGENDS - 1990s ERA =================
+  {
+    id: "michael-jordan",
+    name: "Michael Jordan",
+    era: "1990s",
+    team: "CHI",
+    position: "Shooting Guard",
+    ppg: 31.5,
+    apg: 5.5,
+    rpg: 6.0,
+    fgPercent: 50,
+    tier: "Legendary",
+    overallRating: 99,
+    isActive: false
+  },
+  {
+    id: "scottie-pippen",
+    name: "Scottie Pippen",
+    era: "1990s",
+    team: "CHI",
+    position: "Small Forward",
+    ppg: 18.0,
+    apg: 5.5,
+    rpg: 6.5,
+    fgPercent: 48,
+    tier: "Legendary",
+    overallRating: 95,
+    isActive: false
+  },
+  {
+    id: "dennis-rodman",
+    name: "Dennis Rodman",
+    era: "1990s",
+    team: "CHI",
+    position: "Power Forward",
+    ppg: 6.5,
+    apg: 2.0,
+    rpg: 15.0,
+    fgPercent: 47,
+    tier: "Gold",
+    overallRating: 93,
+    isActive: false
+  },
+  {
+    id: "hakeem-olajuwon",
+    name: "Hakeem Olajuwon",
+    era: "1990s",
+    team: "HOU",
+    position: "Center",
+    ppg: 24.0,
+    apg: 3.0,
+    rpg: 11.5,
+    fgPercent: 51,
+    tier: "Legendary",
+    overallRating: 98,
+    isActive: false
+  },
+  {
+    id: "charles-barkley",
+    name: "Charles Barkley",
+    era: "1990s",
+    team: "PHX",
+    position: "Power Forward",
+    ppg: 23.0,
+    apg: 4.0,
+    rpg: 11.5,
+    fgPercent: 54,
+    tier: "Legendary",
+    overallRating: 96,
+    isActive: false
+  },
+  {
+    id: "karl-malone",
+    name: "Karl Malone",
+    era: "1990s",
+    team: "UTA",
+    position: "Power Forward",
+    ppg: 26.0,
+    apg: 3.5,
+    rpg: 10.0,
+    fgPercent: 52,
+    tier: "Legendary",
+    overallRating: 96,
+    isActive: false
+  },
+  {
+    id: "john-stockton",
+    name: "John Stockton",
+    era: "1990s",
+    team: "UTA",
+    position: "Point Guard",
+    ppg: 14.0,
+    apg: 11.5,
+    rpg: 2.8,
+    fgPercent: 51,
+    tier: "Legendary",
+    overallRating: 95,
+    isActive: false
+  },
+  {
+    id: "david-robinson",
+    name: "David Robinson",
+    era: "1990s",
+    team: "SAS",
+    position: "Center",
+    ppg: 24.0,
+    apg: 3.0,
+    rpg: 11.0,
+    fgPercent: 52,
+    tier: "Legendary",
+    overallRating: 96,
+    isActive: false
+  },
+  {
+    id: "patrick-ewing",
+    name: "Patrick Ewing",
+    era: "1990s",
+    team: "NYK",
+    position: "Center",
+    ppg: 23.0,
+    apg: 2.0,
+    rpg: 10.5,
+    fgPercent: 50,
+    tier: "Legendary",
+    overallRating: 95,
+    isActive: false
+  },
+  {
+    id: "reggie-miller",
+    name: "Reggie Miller",
+    era: "1990s",
+    team: "IND",
+    position: "Shooting Guard",
+    ppg: 19.5,
+    apg: 3.0,
+    rpg: 3.0,
+    fgPercent: 47,
+    tier: "Gold",
+    overallRating: 94,
+    isActive: false
+  },
+  {
+    id: "gary-payton",
+    name: "Gary Payton",
+    era: "1990s",
+    team: "SEA",
+    position: "Point Guard",
+    ppg: 18.0,
+    apg: 7.0,
+    rpg: 4.0,
+    fgPercent: 47,
+    tier: "Gold",
+    overallRating: 94,
+    isActive: false
+  },
+  {
+    id: "clyde-drexler",
+    name: "Clyde Drexler",
+    era: "1990s",
+    team: "POR",
+    position: "Shooting Guard",
+    ppg: 22.0,
+    apg: 5.5,
+    rpg: 6.0,
+    fgPercent: 47,
+    tier: "Gold",
+    overallRating: 94,
+    isActive: false
+  },
+
+  // ================= LEGENDS - 1980s ERA =================
   {
     id: "magic-johnson",
     name: "Magic Johnson",
     era: "1980s",
     team: "LAL",
-    position: "Guard",
+    position: "Point Guard",
     ppg: 19.5,
     apg: 11.2,
     rpg: 7.2,
     fgPercent: 52,
-    tier: "hard",
+    tier: "Legendary",
+    overallRating: 98,
     isActive: false
   },
   {
@@ -24,12 +831,13 @@ const RAW_PRELOADED_PLAYERS = [
     name: "Larry Bird",
     era: "1980s",
     team: "BOS",
-    position: "Forward",
+    position: "Small Forward",
     ppg: 24.3,
     apg: 6.3,
     rpg: 10.0,
     fgPercent: 49,
-    tier: "hard",
+    tier: "Legendary",
+    overallRating: 98,
     isActive: false
   },
   {
@@ -42,7 +850,8 @@ const RAW_PRELOADED_PLAYERS = [
     apg: 3.6,
     rpg: 11.2,
     fgPercent: 56,
-    tier: "hard",
+    tier: "Legendary",
+    overallRating: 98,
     isActive: false
   },
   {
@@ -50,345 +859,253 @@ const RAW_PRELOADED_PLAYERS = [
     name: "Isiah Thomas",
     era: "1980s",
     team: "DET",
-    position: "Guard",
+    position: "Point Guard",
     ppg: 19.2,
     apg: 9.3,
     rpg: 3.6,
     fgPercent: 45,
-    tier: "medium",
+    tier: "Legendary",
+    overallRating: 95,
     isActive: false
   },
   {
-    id: "dominique-wilkins",
-    name: "Dominique Wilkins",
+    id: "julius-erving",
+    name: "Julius Erving",
     era: "1980s",
-    team: "ATL",
-    position: "Forward",
-    ppg: 24.8,
-    apg: 2.5,
-    rpg: 6.7,
-    fgPercent: 46,
-    tier: "medium",
-    isActive: false
-  },
-  {
-    id: "john-paxson",
-    name: "John Paxson",
-    era: "1980s",
-    team: "CHI",
-    position: "Guard",
-    ppg: 7.2,
-    apg: 3.6,
-    rpg: 1.2,
-    fgPercent: 47,
-    tier: "easy",
-    isActive: false
-  },
-
-  // ================= 1990s =================
-  {
-    id: "michael-jordan",
-    name: "Michael Jordan",
-    era: "1990s",
-    team: "CHI",
-    position: "Guard",
-    ppg: 30.1,
-    apg: 5.3,
-    rpg: 6.2,
-    fgPercent: 50,
-    tier: "hard",
-    isActive: false
-  },
-  {
-    id: "hakeem-olajuwon",
-    name: "Hakeem Olajuwon",
-    era: "1990s",
-    team: "HOU",
-    position: "Center",
-    ppg: 21.8,
-    apg: 2.5,
-    rpg: 11.1,
-    fgPercent: 51,
-    tier: "hard",
-    isActive: false
-  },
-  {
-    id: "reggie-miller",
-    name: "Reggie Miller",
-    era: "1990s",
-    team: "IND",
-    position: "Guard",
-    ppg: 18.2,
-    apg: 3.0,
-    rpg: 3.0,
-    fgPercent: 47,
-    tier: "medium",
-    isActive: false
-  },
-  {
-    id: "charles-barkley",
-    name: "Charles Barkley",
-    era: "1990s",
-    team: "PHX",
-    position: "Forward",
-    ppg: 22.1,
-    apg: 3.9,
-    rpg: 11.7,
-    fgPercent: 54,
-    tier: "medium",
-    isActive: false
-  },
-  {
-    id: "steve-kerr",
-    name: "Steve Kerr",
-    era: "1990s",
-    team: "CHI",
-    position: "Guard",
-    ppg: 6.0,
-    apg: 1.8,
-    rpg: 1.2,
-    fgPercent: 48,
-    tier: "easy",
-    isActive: false
-  },
-  {
-    id: "muggsy-bogues",
-    name: "Muggsy Bogues",
-    era: "1990s",
-    team: "CHA",
-    position: "Guard",
-    ppg: 7.7,
-    apg: 7.6,
-    rpg: 2.6,
-    fgPercent: 46,
-    tier: "easy",
-    isActive: false
-  },
-
-  // ================= 2000s =================
-  {
-    id: "kobe-bryant",
-    name: "Kobe Bryant",
-    era: "2000s",
-    team: "LAL",
-    position: "Guard",
-    ppg: 25.0,
-    apg: 4.7,
-    rpg: 5.2,
-    fgPercent: 45,
-    tier: "hard",
-    isActive: false
-  },
-  {
-    id: "shaquille-oneal",
-    name: "Shaquille O'Neal",
-    era: "2000s",
-    team: "LAL",
-    position: "Center",
-    ppg: 23.7,
-    apg: 2.5,
-    rpg: 10.9,
-    fgPercent: 58,
-    tier: "hard",
-    isActive: false
-  },
-  {
-    id: "tim-duncan",
-    name: "Tim Duncan",
-    era: "2000s",
-    team: "SAS",
-    position: "Center",
-    ppg: 19.0,
-    apg: 3.0,
-    rpg: 10.8,
-    fgPercent: 51,
-    tier: "hard",
-    isActive: false
-  },
-  {
-    id: "allen-iverson",
-    name: "Allen Iverson",
-    era: "2000s",
     team: "PHI",
-    position: "Guard",
-    ppg: 26.7,
+    position: "Small Forward",
+    ppg: 22.0,
+    apg: 4.0,
+    rpg: 6.7,
+    fgPercent: 50,
+    tier: "Legendary",
+    overallRating: 96,
+    isActive: false
+  },
+  {
+    id: "moses-malone",
+    name: "Moses Malone",
+    era: "1980s",
+    team: "PHI",
+    position: "Center",
+    ppg: 21.0,
+    apg: 1.5,
+    rpg: 12.5,
+    fgPercent: 49,
+    tier: "Legendary",
+    overallRating: 95,
+    isActive: false
+  },
+
+  // ================= DYNAMIC COLLECTION ASSETS & CONTEMPORARY STARTERS/ROLE SQUAD =================
+  {
+    id: "jalen-brunson",
+    name: "Jalen Brunson",
+    era: "Current",
+    team: "NYK",
+    position: "Point Guard",
+    ppg: 28.7,
+    apg: 6.7,
+    rpg: 3.6,
+    fgPercent: 48,
+    tier: "Gold",
+    overallRating: 93,
+    isActive: true
+  },
+  {
+    id: "de-aaron-fox",
+    name: "De'Aaron Fox",
+    era: "Current",
+    team: "SAC",
+    position: "Point Guard",
+    ppg: 26.6,
+    apg: 5.6,
+    rpg: 4.6,
+    fgPercent: 47,
+    tier: "Gold",
+    overallRating: 90,
+    isActive: true
+  },
+  {
+    id: "domantas-sabonis",
+    name: "Domantas Sabonis",
+    era: "Current",
+    team: "SAC",
+    position: "Center",
+    ppg: 19.4,
+    apg: 8.2,
+    rpg: 13.7,
+    fgPercent: 59,
+    tier: "Gold",
+    overallRating: 88,
+    isActive: true
+  },
+  {
+    id: "tyrese-maxey",
+    name: "Tyrese Maxey",
+    era: "Current",
+    team: "PHI",
+    position: "Point Guard",
+    ppg: 25.9,
     apg: 6.2,
     rpg: 3.7,
-    fgPercent: 42,
-    tier: "medium",
-    isActive: false
-  },
-  {
-    id: "robert-horry",
-    name: "Robert Horry",
-    era: "2000s",
-    team: "LAL",
-    position: "Forward",
-    ppg: 7.0,
-    apg: 2.1,
-    rpg: 4.8,
-    fgPercent: 42,
-    tier: "easy",
-    isActive: false
-  },
-  {
-    id: "derek-fisher",
-    name: "Derek Fisher",
-    era: "2000s",
-    team: "LAL",
-    position: "Guard",
-    ppg: 8.3,
-    apg: 3.0,
-    rpg: 2.1,
-    fgPercent: 40,
-    tier: "easy",
-    isActive: false
-  },
-
-  // ================= 2010s =================
-  {
-    id: "lebron-james-10s",
-    name: "LeBron James",
-    era: "2010s",
-    team: "MIA",
-    position: "Forward",
-    ppg: 27.2,
-    apg: 7.4,
-    rpg: 7.5,
-    fgPercent: 50,
-    tier: "hard",
-    isActive: false
-  },
-  {
-    id: "stephen-curry-10s",
-    name: "Stephen Curry",
-    era: "2010s",
-    team: "GSW",
-    position: "Guard",
-    ppg: 24.8,
-    apg: 6.4,
-    rpg: 4.7,
-    fgPercent: 47,
-    tier: "hard",
-    isActive: false
-  },
-  {
-    id: "kevin-durant-10s",
-    name: "Kevin Durant",
-    era: "2010s",
-    team: "OKC",
-    position: "Forward",
-    ppg: 27.3,
-    apg: 4.4,
-    rpg: 7.0,
-    fgPercent: 50,
-    tier: "hard",
-    isActive: false
-  },
-  {
-    id: "ray-allen",
-    name: "Ray Allen",
-    era: "2010s",
-    team: "MIA",
-    position: "Guard",
-    ppg: 18.9,
-    apg: 3.4,
-    rpg: 4.1,
     fgPercent: 45,
-    tier: "medium",
-    isActive: false
-  },
-  {
-    id: "danny-green",
-    name: "Danny Green",
-    era: "2010s",
-    team: "SAS",
-    position: "Guard",
-    ppg: 8.7,
-    apg: 1.5,
-    rpg: 3.4,
-    fgPercent: 42,
-    tier: "easy",
-    isActive: false
-  },
-  {
-    id: "kyle-korver",
-    name: "Kyle Korver",
-    era: "2010s",
-    team: "ATL",
-    position: "Guard",
-    ppg: 9.7,
-    apg: 1.7,
-    rpg: 3.0,
-    fgPercent: 44,
-    tier: "easy",
-    isActive: false
-  },
-
-  // ================= Current =================
-  {
-    id: "nikola-jokic-cur",
-    name: "Nikola Jokić",
-    era: "Current",
-    team: "DEN",
-    position: "Center",
-    ppg: 29.7,
-    apg: 10.3,
-    rpg: 13.7,
-    fgPercent: 58,
-    tier: "hard",
+    tier: "Gold",
+    overallRating: 89,
     isActive: true
   },
   {
-    id: "giannis-antetokounmpo-cur",
-    name: "Giannis Antetokounmpo",
-    era: "Current",
-    team: "MIL",
-    position: "Forward",
-    ppg: 31.0,
-    apg: 6.2,
-    rpg: 12.3,
-    fgPercent: 61,
-    tier: "hard",
-    isActive: true
-  },
-  {
-    id: "luka-doncic-cur",
-    name: "Luka Dončić",
-    era: "Current",
-    team: "DAL",
-    position: "Guard",
-    ppg: 28.5,
-    apg: 9.2,
-    rpg: 8.1,
-    fgPercent: 48,
-    tier: "hard",
-    isActive: true
-  },
-  {
-    id: "jayson-tatum-cur",
-    name: "Jayson Tatum",
+    id: "jaylen-brown",
+    name: "Jaylen Brown",
     era: "Current",
     team: "BOS",
-    position: "Forward",
-    ppg: 27.0,
-    apg: 4.8,
-    rpg: 8.2,
-    fgPercent: 47,
-    tier: "medium",
+    position: "Shooting Guard",
+    ppg: 23.0,
+    apg: 3.6,
+    rpg: 5.5,
+    fgPercent: 50,
+    tier: "Gold",
+    overallRating: 92,
     isActive: true
   },
   {
-    id: "shai-gilgeous-cur",
-    name: "Shai Gilgeous-Alexander",
+    id: "jamal-murray",
+    name: "Jamal Murray",
     era: "Current",
-    team: "OKC",
-    position: "Guard",
-    ppg: 30.1,
-    apg: 6.4,
-    rpg: 5.5,
-    fgPercent: 53,
-    tier: "medium",
+    team: "DEN",
+    position: "Point Guard",
+    ppg: 21.2,
+    apg: 6.5,
+    rpg: 4.1,
+    fgPercent: 46,
+    tier: "Gold",
+    overallRating: 88,
+    isActive: true
+  },
+  {
+    id: "jrue-holiday",
+    name: "Jrue Holiday",
+    era: "Current",
+    team: "BOS",
+    position: "Point Guard",
+    ppg: 12.8,
+    apg: 4.8,
+    rpg: 5.4,
+    fgPercent: 48,
+    tier: "Gold",
+    overallRating: 87,
+    isActive: true
+  },
+  {
+    id: "derrick-white",
+    name: "Derrick White",
+    era: "Current",
+    team: "BOS",
+    position: "Point Guard",
+    ppg: 15.2,
+    apg: 5.2,
+    rpg: 4.2,
+    fgPercent: 46,
+    tier: "Silver",
+    overallRating: 85,
+    isActive: true
+  },
+  {
+    id: "kristaps-porzingis",
+    name: "Kristaps Porzingis",
+    era: "Current",
+    team: "BOS",
+    position: "Power Forward",
+    ppg: 20.1,
+    apg: 2.0,
+    rpg: 7.2,
+    fgPercent: 51,
+    tier: "Gold",
+    overallRating: 88,
+    isActive: true
+  },
+  {
+    id: "rudy-gobert",
+    name: "Rudy Gobert",
+    era: "Current",
+    team: "MIN",
+    position: "Center",
+    ppg: 14.0,
+    apg: 1.3,
+    rpg: 12.9,
+    fgPercent: 65,
+    tier: "Gold",
+    overallRating: 87,
+    isActive: true
+  },
+  {
+    id: "karl-anthony-towns",
+    name: "Karl-Anthony Towns",
+    era: "Current",
+    team: "NYK",
+    position: "Center",
+    ppg: 21.8,
+    apg: 3.0,
+    rpg: 8.3,
+    fgPercent: 50,
+    tier: "Gold",
+    overallRating: 88,
+    isActive: true
+  },
+  {
+    id: "bradley-beal",
+    name: "Bradley Beal",
+    era: "Current",
+    team: "PHX",
+    position: "Shooting Guard",
+    ppg: 18.2,
+    apg: 5.0,
+    rpg: 4.4,
+    fgPercent: 51,
+    tier: "Silver",
+    overallRating: 85,
+    isActive: true
+  },
+  {
+    id: "brandon-ingram",
+    name: "Brandon Ingram",
+    era: "Current",
+    team: "NOP",
+    position: "Small Forward",
+    ppg: 20.8,
+    apg: 5.7,
+    rpg: 5.1,
+    fgPercent: 49,
+    tier: "Silver",
+    overallRating: 86,
+    isActive: true
+  },
+  {
+    id: "mikal-bridges",
+    name: "Mikal Bridges",
+    era: "Current",
+    team: "NYK",
+    position: "Small Forward",
+    ppg: 19.6,
+    apg: 3.6,
+    rpg: 4.5,
+    fgPercent: 44,
+    tier: "Silver",
+    overallRating: 86,
+    isActive: true
+  },
+  {
+    id: "marcus-smart",
+    name: "Marcus Smart",
+    era: "Current",
+    team: "MEM",
+    position: "Point Guard",
+    ppg: 11.5,
+    apg: 5.0,
+    rpg: 3.5,
+    fgPercent: 41,
+    tier: "Silver",
+    overallRating: 82,
     isActive: true
   },
   {
@@ -396,12 +1113,69 @@ const RAW_PRELOADED_PLAYERS = [
     name: "Alex Caruso",
     era: "Current",
     team: "OKC",
-    position: "Guard",
+    position: "Point Guard",
     ppg: 10.1,
     apg: 3.5,
     rpg: 3.8,
     fgPercent: 46,
-    tier: "easy",
+    tier: "Silver",
+    overallRating: 81,
+    isActive: true
+  },
+  {
+    id: "josh-hart",
+    name: "Josh Hart",
+    era: "Current",
+    team: "NYK",
+    position: "Small Forward",
+    ppg: 9.4,
+    apg: 4.1,
+    rpg: 8.3,
+    fgPercent: 43,
+    tier: "Silver",
+    overallRating: 84,
+    isActive: true
+  },
+  {
+    id: "donte-divincenzo",
+    name: "Donte DiVincenzo",
+    era: "Current",
+    team: "MIN",
+    position: "Shooting Guard",
+    ppg: 15.5,
+    apg: 2.6,
+    rpg: 3.7,
+    fgPercent: 44,
+    tier: "Silver",
+    overallRating: 81,
+    isActive: true
+  },
+  {
+    id: "bruce-brown",
+    name: "Bruce Brown",
+    era: "Current",
+    team: "TOR",
+    position: "Shooting Guard",
+    ppg: 10.8,
+    apg: 2.7,
+    rpg: 4.2,
+    fgPercent: 47,
+    tier: "Silver",
+    overallRating: 80,
+    isActive: true
+  },
+  {
+    id: "austin-reaves",
+    name: "Austin Reaves",
+    era: "Current",
+    team: "LAL",
+    position: "Shooting Guard",
+    ppg: 15.9,
+    apg: 5.5,
+    rpg: 4.3,
+    fgPercent: 48,
+    tier: "Silver",
+    overallRating: 83,
     isActive: true
   },
   {
@@ -414,162 +1188,393 @@ const RAW_PRELOADED_PLAYERS = [
     apg: 1.3,
     rpg: 5.2,
     fgPercent: 47,
-    tier: "easy",
+    tier: "Silver",
+    overallRating: 84,
     isActive: true
+  },
+  {
+    id: "bobby-portis",
+    name: "Bobby Portis",
+    era: "Current",
+    team: "MIL",
+    position: "Power Forward",
+    ppg: 13.8,
+    apg: 1.3,
+    rpg: 7.4,
+    fgPercent: 50,
+    tier: "Silver",
+    overallRating: 81,
+    isActive: true
+  },
+  {
+    id: "grayson-allen",
+    name: "Grayson Allen",
+    era: "Current",
+    team: "PHX",
+    position: "Shooting Guard",
+    ppg: 13.5,
+    apg: 3.0,
+    rpg: 3.9,
+    fgPercent: 50,
+    tier: "Bronze",
+    overallRating: 78,
+    isActive: true
+  },
+  {
+    id: "al-horford",
+    name: "Al Horford",
+    era: "Current",
+    team: "BOS",
+    position: "Center",
+    ppg: 8.6,
+    apg: 2.6,
+    rpg: 6.4,
+    fgPercent: 51,
+    tier: "Silver",
+    overallRating: 82,
+    isActive: true
+  },
+  {
+    id: "malik-monk",
+    name: "Malik Monk",
+    era: "Current",
+    team: "SAC",
+    position: "Shooting Guard",
+    ppg: 15.4,
+    apg: 5.1,
+    rpg: 2.9,
+    fgPercent: 44,
+    tier: "Silver",
+    overallRating: 81,
+    isActive: true
+  },
+  {
+    id: "tj-mcconnell",
+    name: "T.J. McConnell",
+    era: "Current",
+    team: "IND",
+    position: "Point Guard",
+    ppg: 10.2,
+    apg: 5.5,
+    rpg: 2.7,
+    fgPercent: 55,
+    tier: "Bronze",
+    overallRating: 79,
+    isActive: true
+  },
+  {
+    id: "luguentz-dort",
+    name: "Luguentz Dort",
+    era: "Current",
+    team: "OKC",
+    position: "Small Forward",
+    ppg: 10.9,
+    apg: 1.4,
+    rpg: 3.6,
+    fgPercent: 43,
+    tier: "Silver",
+    overallRating: 80,
+    isActive: true
+  },
+  {
+    id: "payton-pritchard",
+    name: "Payton Pritchard",
+    era: "Current",
+    team: "BOS",
+    position: "Point Guard",
+    ppg: 9.6,
+    apg: 3.4,
+    rpg: 3.2,
+    fgPercent: 46,
+    tier: "Bronze",
+    overallRating: 78,
+    isActive: true
+  },
+  {
+    id: "kevon-looney",
+    name: "Kevon Looney",
+    era: "Current",
+    team: "GSW",
+    position: "Center",
+    ppg: 5.6,
+    apg: 2.5,
+    rpg: 7.3,
+    fgPercent: 54,
+    tier: "Bronze",
+    overallRating: 78,
+    isActive: true
+  },
+  {
+    id: "jose-alvarado",
+    name: "Jose Alvarado",
+    era: "Current",
+    team: "NOP",
+    position: "Point Guard",
+    ppg: 7.0,
+    apg: 3.0,
+    rpg: 2.3,
+    fgPercent: 41,
+    tier: "Bronze",
+    overallRating: 76,
+    isActive: true
+  },
+  {
+    id: "christian-wood",
+    name: "Christian Wood",
+    era: "Current",
+    team: "LAL",
+    position: "Power Forward",
+    ppg: 6.9,
+    apg: 1.0,
+    rpg: 5.1,
+    fgPercent: 46,
+    tier: "Bronze",
+    overallRating: 77,
+    isActive: true
+  },
+
+  // ================= HISTORICAL ROLE PLAYERS & CLASSIC SQUAD HELPERS =================
+  {
+    id: "tony-parker",
+    name: "Tony Parker",
+    era: "2000s",
+    team: "SAS",
+    position: "Point Guard",
+    ppg: 15.8,
+    apg: 5.6,
+    rpg: 2.7,
+    fgPercent: 49,
+    tier: "Gold",
+    overallRating: 89,
+    isActive: false
+  },
+  {
+    id: "manu-ginobili",
+    name: "Manu Ginóbili",
+    era: "2000s",
+    team: "SAS",
+    position: "Shooting Guard",
+    ppg: 13.3,
+    apg: 3.8,
+    rpg: 3.5,
+    fgPercent: 45,
+    tier: "Gold",
+    overallRating: 89,
+    isActive: false
+  },
+  {
+    id: "steve-kerr",
+    name: "Steve Kerr",
+    era: "1990s",
+    team: "CHI",
+    position: "Point Guard",
+    ppg: 6.0,
+    apg: 1.8,
+    rpg: 1.2,
+    fgPercent: 48,
+    tier: "Bronze",
+    overallRating: 75,
+    isActive: false
+  },
+  {
+    id: "john-paxson",
+    name: "John Paxson",
+    era: "1990s",
+    team: "CHI",
+    position: "Point Guard",
+    ppg: 7.2,
+    apg: 3.6,
+    rpg: 1.2,
+    fgPercent: 47,
+    tier: "Bronze",
+    overallRating: 72,
+    isActive: false
+  },
+  {
+    id: "danny-green",
+    name: "Danny Green",
+    era: "2010s",
+    team: "SAS",
+    position: "Shooting Guard",
+    ppg: 8.7,
+    apg: 1.5,
+    rpg: 3.4,
+    fgPercent: 42,
+    tier: "Bronze",
+    overallRating: 79,
+    isActive: false
+  },
+  {
+    id: "kyle-korver",
+    name: "Kyle Korver",
+    era: "2010s",
+    team: "ATL",
+    position: "Shooting Guard",
+    ppg: 9.7,
+    apg: 1.7,
+    rpg: 3.0,
+    fgPercent: 44,
+    tier: "Bronze",
+    overallRating: 78,
+    isActive: false
+  },
+  {
+    id: "robert-horry",
+    name: "Robert Horry",
+    era: "2000s",
+    team: "LAL",
+    position: "Power Forward",
+    ppg: 7.0,
+    apg: 2.1,
+    rpg: 4.8,
+    fgPercent: 42,
+    tier: "Bronze",
+    overallRating: 76,
+    isActive: false
+  },
+  {
+    id: "derek-fisher",
+    name: "Derek Fisher",
+    era: "2000s",
+    team: "LAL",
+    position: "Point Guard",
+    ppg: 8.3,
+    apg: 3.0,
+    rpg: 2.1,
+    fgPercent: 40,
+    tier: "Bronze",
+    overallRating: 78,
+    isActive: false
+  },
+  {
+    id: "spud-webb",
+    name: "Spud Webb",
+    era: "1980s",
+    team: "ATL",
+    position: "Point Guard",
+    ppg: 9.9,
+    apg: 5.3,
+    rpg: 2.1,
+    fgPercent: 45,
+    tier: "Bronze",
+    overallRating: 76,
+    isActive: false
+  },
+  {
+    id: "kenny-smith",
+    name: "Kenny Smith",
+    era: "1990s",
+    team: "HOU",
+    position: "Point Guard",
+    ppg: 12.8,
+    apg: 5.0,
+    rpg: 2.0,
+    fgPercent: 48,
+    tier: "Silver",
+    overallRating: 80,
+    isActive: false
+  },
+  {
+    id: "toni-kukoc",
+    name: "Toni Kukoč",
+    era: "1990s",
+    team: "CHI",
+    position: "Small Forward",
+    ppg: 11.6,
+    apg: 3.7,
+    rpg: 4.2,
+    fgPercent: 44,
+    tier: "Silver",
+    overallRating: 85,
+    isActive: false
+  },
+  {
+    id: "jason-terry",
+    name: "Jason Terry",
+    era: "2000s",
+    team: "DAL",
+    position: "Shooting Guard",
+    ppg: 13.4,
+    apg: 3.8,
+    rpg: 2.3,
+    fgPercent: 44,
+    tier: "Silver",
+    overallRating: 84,
+    isActive: false
+  },
+  {
+    id: "andre-iguodala",
+    name: "Andre Iguodala",
+    era: "2010s",
+    team: "GSW",
+    position: "Small Forward",
+    ppg: 11.3,
+    apg: 4.2,
+    rpg: 4.9,
+    fgPercent: 46,
+    tier: "Silver",
+    overallRating: 86,
+    isActive: false
+  },
+  {
+    id: "amare-stoudemire",
+    name: "Amar'e Stoudemire",
+    era: "2000s",
+    team: "PHX",
+    position: "Power Forward",
+    ppg: 18.9,
+    apg: 1.2,
+    rpg: 7.8,
+    fgPercent: 53,
+    tier: "Gold",
+    overallRating: 91,
+    isActive: false
+  },
+  {
+    id: "shawn-marion",
+    name: "Shawn Marion",
+    era: "2000s",
+    team: "PHX",
+    position: "Small Forward",
+    ppg: 15.2,
+    apg: 1.9,
+    rpg: 8.7,
+    fgPercent: 48,
+    tier: "Gold",
+    overallRating: 88,
+    isActive: false
+  },
+  {
+    id: "lamar-odom",
+    name: "Lamar Odom",
+    era: "2000s",
+    team: "LAL",
+    position: "Power Forward",
+    ppg: 13.3,
+    apg: 3.7,
+    rpg: 8.4,
+    fgPercent: 46,
+    tier: "Silver",
+    overallRating: 84,
+    isActive: false
   }
 ];
 
-const GENERATED_RAW_PLAYERS: any[] = [];
+export const ALL_RAW_PLAYERS = [...RAW_PRELOADED_PLAYERS];
 
-const firstNamesList = [
-  "Jalen", "Cade", "Evan", "Keegan", "Tyrese", "Austin", "Malik", "Rui", "Luguentz", "Chet", "Dereck", "Keyonte", "Brandon", "Scoot", "Amen", "Ausar", "Ja", "Desmond", "Marcus", "Dillon", "Fred", "Alperen", "Jabari", "Tari", "Cam", "Jaden", "Isaiah", "Pascal", "Myles", "Benedict", "Andrew", "De'Aaron", "Domantas", "Keon", "Harrison", "Derrick", "Jrue", "Kristaps", "Jaylen", "Al", "Aaron", "Michael", "Jamal", "Kentavious", "Brook", "Khris", "Damian", "Bobby", "Grayson", "Bradley", "Devin", "Yusuf", "Taurean", "Jarred", "Gabe", "Christian", "Jaxson", "Max", "Mike", "Rudy", "Karl-Anthony", "Anthony", "Naz", "Kyle", "Nickeil", "Cole", "Deandre", "Zach", "Alex", "Coby", "Nikola", "Patrick", "Ayo", "Andre", "Torrey", "Lonzo", "DeMar", "Terry", "LaMelo", "Miles", "Mark", "Nick", "PJ", "Cody", "Saddiq", "De'Andre", "Clint", "Bogdan", "Onyeka", "Garrison", "Trae", "Dejounte", "Kyrie", "Luka", "Grant", "Josh", "Tim", "Maxi", "Dwight", "Richaun", "Olivier-Maxence"
-];
-
-const lastNamesList = [
-  "Suggs", "Cunningham", "Mobley", "Murray", "Haliburton", "Reaves", "Monk", "Hachimura", "Dort", "Holmgren", "Lively", "George", "Miller", "Henderson", "Thompson", "Morant", "Bane", "Smart", "Brooks", "VanVleet", "Sengun", "Smith", "Eason", "Whitmore", "McDaniels", "Stewart", "Duren", "Siakam", "Turner", "Mathurin", "Nembhard", "Fox", "Sabonis", "Ellis", "Barnes", "White", "Holiday", "Porzingis", "Brown", "Horford", "Gordon", "Porter", "Caldwell-Pope", "Lopez", "Middleton", "Lillard", "Portis", "Allen", "Beal", "Booker", "Nurkic", "Reddish", "Prince", "Vanderbilt", "Vincent", "Wood", "Hayes", "Christie", "Conley", "Gobert", "Towns", "Edwards", "Reid", "Anderson", "Aldridge", "Ayton", "Jordan", "LaVine", "Caruso", "Vucevic", "Williams", "Dosunmu", "Drummond", "Craig", "Ball", "DeRozan", "Rozier", "Bridges", "Richards", "Washington", "Martin", "Bey", "Hunter", "Capela", "Bogdanovic", "Okongwu", "Johnson", "Mathews", "Young", "Irving", "Doncic", "Jones", "Hardaway", "Kleber", "Powell", "Holmes", "Hardy", "Prosper", "Morris"
-];
-
-const nbaTeams = [
-  "BOS", "BKN", "NYK", "PHI", "TOR", "CHI", "CLE", "DET", "IND", "MIL", "ATL", "CHA", "MIA", "ORL", "WAS", "DEN", "MIN", "OKC", "POR", "UTA", "GSW", "LAC", "LAL", "PHX", "SAC", "DAL", "HOU", "MEM", "NOP", "SAS"
-];
-
-const eras = ["1980s", "1990s", "2000s", "2010s", "Current"];
-
-const positions = [
-  "Point Guard",
-  "Shooting Guard",
-  "Small Forward",
-  "Power Forward",
-  "Center"
-];
-
-function getSeededRandom(seedString: string) {
-  let h = 1779033703 ^ seedString.length;
-  for (let i = 0; i < seedString.length; i++) {
-    h = Math.imul(h ^ seedString.charCodeAt(i), 3432918353);
-    h = (h << 13) | (h >>> 19);
-  }
-  return function() {
-    h = Math.imul(h ^ (h >>> 16), 2246822507);
-    h = Math.imul(h ^ (h >>> 13), 3266489909);
-    return ((h ^= h >>> 16) >>> 0) / 4294967296;
-  };
-}
-
-for (let i = 0; i < 490; i++) {
-  const seed = getSeededRandom("gen-player-" + i);
-  const fIdx = Math.floor(seed() * firstNamesList.length);
-  const lIdx = Math.floor(seed() * lastNamesList.length);
-  const tIdx = Math.floor(seed() * nbaTeams.length);
-  const eIdx = Math.floor(seed() * eras.length);
-  const pos = positions[Math.floor(seed() * positions.length)];
+export function getPlayerOverallAndTier(player: { ppg: number; apg: number; rpg: number; id?: string; name?: string }): { overallRating: number; tier: "Bronze" | "Silver" | "Gold" | "Legendary" } {
+  const pName = player.name || "";
+  const pId = player.id || "";
   
-  const firstName = firstNamesList[fIdx];
-  const lastName = lastNamesList[lIdx];
-  const fullName = `${firstName} ${lastName}`;
-  const team = nbaTeams[tIdx];
-  const era = eras[eIdx];
-  
-  let ppg = 0;
-  let apg = 0;
-  let rpg = 0;
-  let fgPercent = Math.round(42 + seed() * 15);
-  
-  if (pos === "Point Guard") {
-    ppg = 10 + seed() * 16;
-    apg = 5 + seed() * 6;
-    rpg = 2.5 + seed() * 3;
-  } else if (pos === "Shooting Guard") {
-    ppg = 12 + seed() * 18;
-    apg = 2.5 + seed() * 4;
-    rpg = 3 + seed() * 3;
-  } else if (pos === "Small Forward") {
-    ppg = 11 + seed() * 17;
-    apg = 2 + seed() * 4;
-    rpg = 4.5 + seed() * 4;
-  } else if (pos === "Power Forward") {
-    ppg = 9 + seed() * 15;
-    apg = 1.5 + seed() * 3;
-    rpg = 6.5 + seed() * 5.5;
-  } else {
-    ppg = 8 + seed() * 14;
-    apg = 1 + seed() * 3;
-    rpg = 8 + seed() * 6;
-    fgPercent = Math.round(50 + seed() * 12);
-  }
-  
-  ppg = Math.round(ppg * 10) / 10;
-  apg = Math.round(apg * 10) / 10;
-  rpg = Math.round(rpg * 10) / 10;
-  
-  const alreadyExistsObj = RAW_PRELOADED_PLAYERS.find(p => p.name.toLowerCase() === fullName.toLowerCase());
-  const actualName = alreadyExistsObj ? `${fullName} Jr.` : fullName;
-  
-  const id = `gen-${firstName.toLowerCase()}-${lastName.toLowerCase()}-${i}`;
-  
-  const scorerComponent = ppg * 1.5;
-  const facilitatorComponent = apg * 1.8 + rpg * 1.4;
-  const ratingProjected = Math.round(45 + scorerComponent + facilitatorComponent);
-  const diffTag = ratingProjected >= 85 ? "hard" : (ratingProjected >= 75 ? "medium" : "easy");
-  
-  GENERATED_RAW_PLAYERS.push({
-    id,
-    name: actualName,
-    era,
-    team,
-    position: pos,
-    ppg,
-    apg,
-    rpg,
-    fgPercent,
-    tier: diffTag,
-    isActive: seed() > 0.4
-  });
-}
+  const found = RAW_PRELOADED_PLAYERS.find(p => 
+    p.id === pId || p.name.toLowerCase() === pName.toLowerCase()
+  );
 
-export const ALL_RAW_PLAYERS = [...RAW_PRELOADED_PLAYERS, ...GENERATED_RAW_PLAYERS];
-
-export function getPlayerOverallAndTier(player: { ppg: number; apg: number; rpg: number; id?: string }): { overallRating: number; tier: "Bronze" | "Silver" | "Gold" | "Legendary" } {
-  const idMap: Record<string, { ovr: number; tier: "Bronze" | "Silver" | "Gold" | "Legendary" }> = {
-    "magic-johnson": { ovr: 96, tier: "Legendary" },
-    "larry-bird": { ovr: 96, tier: "Legendary" },
-    "kareem-abdul-jabbar": { ovr: 95, tier: "Legendary" },
-    "isiah-thomas": { ovr: 87, tier: "Gold" },
-    "dominique-wilkins": { ovr: 88, tier: "Gold" },
-    "john-paxson": { ovr: 72, tier: "Bronze" },
-    "michael-jordan": { ovr: 99, tier: "Legendary" },
-    "hakeem-olajuwon": { ovr: 97, tier: "Legendary" },
-    "reggie-miller": { ovr: 83, tier: "Silver" },
-    "charles-barkley": { ovr: 92, tier: "Gold" },
-    "steve-kerr": { ovr: 68, tier: "Bronze" },
-    "muggsy-bogues": { ovr: 70, tier: "Bronze" },
-    "kobe-bryant": { ovr: 98, tier: "Legendary" },
-    "shaquille-oneal": { ovr: 97, tier: "Legendary" },
-    "tim-duncan": { ovr: 95, tier: "Legendary" },
-    "allen-iverson": { ovr: 92, tier: "Gold" },
-    "robert-horry": { ovr: 74, tier: "Bronze" },
-    "derek-fisher": { ovr: 73, tier: "Bronze" },
-    "lebron-james-10s": { ovr: 98, tier: "Legendary" },
-    "stephen-curry-10s": { ovr: 97, tier: "Legendary" },
-    "kevin-durant-10s": { ovr: 96, tier: "Legendary" },
-    "ray-allen": { ovr: 88, tier: "Gold" },
-    "danny-green": { ovr: 74, tier: "Bronze" },
-    "kyle-korver": { ovr: 72, tier: "Bronze" },
-    "nikola-jokic-cur": { ovr: 97, tier: "Legendary" },
-    "giannis-antetokounmpo-cur": { ovr: 96, tier: "Legendary" },
-    "luka-doncic-cur": { ovr: 95, tier: "Legendary" },
-    "jayson-tatum-cur": { ovr: 89, tier: "Gold" },
-    "shai-gilgeous-cur": { ovr: 91, tier: "Gold" },
-    "alex-caruso": { ovr: 76, tier: "Silver" },
-    "naz-reid": { ovr: 78, tier: "Silver" }
-  };
-
-  const key = player.id || "";
-  if (idMap[key]) {
-    return { overallRating: idMap[key].ovr, tier: idMap[key].tier };
+  if (found) {
+    return { overallRating: found.overallRating, tier: found.tier as any };
   }
 
-  // Dynamic formula for search grounded custom players
+  // Dynamic formula for searched players fallback
   const scorerComponent = player.ppg * 1.5;
   const facilitatorComponent = player.apg * 1.8 + player.rpg * 1.4;
   let rawRating = Math.round(45 + scorerComponent + facilitatorComponent);
@@ -589,12 +1594,24 @@ export function getPlayerOverallAndTier(player: { ppg: number; apg: number; rpg:
   return { overallRating: rawRating, tier };
 }
 
+export function getSeededRandom(seedString: string) {
+  let h = 1779033703 ^ seedString.length;
+  for (let i = 0; i < seedString.length; i++) {
+    h = Math.imul(h ^ seedString.charCodeAt(i), 3432918353);
+    h = (h << 13) | (h >>> 19);
+  }
+  return function() {
+    h = Math.imul(h ^ (h >>> 16), 2246822507);
+    h = Math.imul(h ^ (h >>> 13), 3266489909);
+    return ((h ^= h >>> 16) >>> 0) / 4294967296;
+  };
+}
+
 export function getDetailedAttributes(player: { name: string; position: string; id?: string }, ovr: number) {
   const seedString = `attr-${player.name}-${player.id || ""}`;
   const seed = getSeededRandom(seedString);
   const pos = (player.position || "").toLowerCase();
   
-  // Base values around overall rating
   let three = Math.round(ovr - 12 + seed() * 18);
   let mid = Math.round(ovr - 8 + seed() * 15);
   let ft = Math.round(ovr - 6 + seed() * 12);
@@ -608,7 +1625,6 @@ export function getDetailedAttributes(player: { name: string; position: string; 
   let strength = Math.round(ovr - 12 + seed() * 18);
   let vert = Math.round(ovr - 12 + seed() * 18);
 
-  // Position adjustments
   if (pos.includes("guard") || pos.includes("point")) {
     three += 8;
     mid += 4;
@@ -635,7 +1651,7 @@ export function getDetailedAttributes(player: { name: string; position: string; 
     speed -= 10;
     strength += 14;
     vert -= 4;
-  } else { // Forward / Power Forward / Small Forward
+  } else {
     three += 2;
     mid += 2;
     pass -= 2;
@@ -646,7 +1662,6 @@ export function getDetailedAttributes(player: { name: string; position: string; 
     strength += 6;
   }
 
-  // Double override for specific historical legends
   const nameLower = player.name.toLowerCase();
   if (nameLower.includes("curry")) {
     three = 99;
@@ -697,7 +1712,7 @@ export function getDetailedAttributes(player: { name: string; position: string; 
     pass = 92;
     steal = 88;
     speed = 78;
-  } else if (nameLower.includes("magic-johnson") || nameLower.includes("magic johnson")) {
+  } else if (nameLower.includes("magic")) {
     pass = 99;
     handle = 95;
     three = 78;
@@ -744,7 +1759,7 @@ export const PRELOADED_PLAYERS: PoolPlayer[] = ALL_RAW_PLAYERS.map((p) => {
     ...attributes,
     overallRating: meta.overallRating,
     tier: meta.tier,
-    difficulty: p.tier as "easy" | "medium" | "hard"
+    difficulty: meta.overallRating >= 95 ? "hard" : (meta.overallRating >= 85 ? "medium" : "easy")
   } as PoolPlayer;
 });
 
@@ -756,59 +1771,15 @@ export const OPPONENT_TEAMS = [
   { name: "Fast Break Demons", level: "Medium" }
 ];
 
-// Rich array of 50+ pre-defined themed opponent teams representing various eras and concepts
 export const THEMED_OPPONENT_TEAMS = [
-  { id: "bulls90s", name: "90s Bulls", level: "Legend", tags: ["Jordan", "Pippen", "Rodman"], style: "Defensive Dominance & Midrange Master" },
-  { id: "warriors17", name: "2017 Warriors", level: "Legend", tags: ["Curry", "Durant", "Thompson"], style: "Pace & Space 3PT Fest" },
-  { id: "lakers00s", name: "2000s Lakers", level: "Legend", tags: ["Kobe", "Shaq", "Fisher"], style: "Inside Out Force & Clutch" },
-  { id: "allstars", name: "Modern All-Stars", level: "Legend", tags: ["Luka", "Giannis", "Jokic", "Tatum"], style: "Positionless High-Tempo Elite" },
-  { id: "grizzlies", name: "Gritty Grizzlies", level: "Hard", tags: ["Randolph", "Gasol", "Allen"], style: "Grit and Grind Heavy Interior" },
-  { id: "pace_space", name: "Pace & Space 5-Out", level: "Hard", tags: ["Curry", "Allen", "Korver", "Nash"], style: "Maximum Threes & Transition" },
-  { id: "showtime", name: "Showtime Lakers", level: "Legend", tags: ["Magic", "Kareem", "Worthy"], style: "Fast Breaks & Highlight Passes" },
-  { id: "bad_boys", name: "Bad Boys Pistons", level: "Hard", tags: ["Isiah", "Dumars", "Laimbeer"], style: "Suffocating Perimeter & physical D" },
-  { id: "celtics86", name: "1986 Celtics", level: "Hard", tags: ["Bird", "McHale", "Parish"], style: "Team Passing & Elite IQ Shooting" },
-  { id: "rockets95", name: "1995 Rockets", level: "Hard", tags: ["Olajuwon", "Drexler", "Horry"], style: "Post Dominance & Corner Shooters" },
-  { id: "pistons04", name: "2004 Pistons", level: "Hard", tags: ["Billups", "Milton", "Prince", "Ben Wallace"], style: "Slow Grind Shot Defense" },
-  { id: "heat13", name: "2013 Heat", level: "Legend", tags: ["LeBron", "Wade", "Bosh", "Allen"], style: "Aggressive Traps & Slasher Drive" },
-  { id: "spurs14", name: "2014 Spurs", level: "Hard", tags: ["Duncan", "Parker", "Ginobili", "Leonard"], style: "The Beautiful Game Ball Movement" },
-  { id: "cavs16", name: "2016 Cavaliers", level: "Hard", tags: ["LeBron", "Irving", "Love"], style: "Isolation Scoring & Clutch Threes" },
-  { id: "raptors19", name: "2019 Raptors", level: "Medium", tags: ["Leonard", "Siakam", "Lowry"], style: "Lockdown Help Defense" },
-  { id: "bucks21", name: "2021 Bucks", level: "Hard", tags: ["Giannis", "Middleton", "Holiday"], style: "Rim Attack & Brickwall Screen" },
-  { id: "nuggets23", name: "2023 Nuggets", level: "Hard", tags: ["Jokic", "Murray", "Gordon"], style: "Two-Man Game & Post Facilitation" },
-  { id: "run_tmc", name: "Run TMC Warriors", level: "Medium", tags: ["Hardaway", "Richmond", "Mullin"], style: "Uptempo Run & Gun Offense" },
-  { id: "lob_city", name: "Lob City Clippers", level: "Medium", tags: ["Paul", "Griffin", "Jordan"], style: "High-Flying Dunkers & Pick and Roll" },
-  { id: "kings02", name: "2002 Kings", level: "Medium", tags: ["Webber", "Bibby", "Divac", "Stojakovic"], style: "High-Post Elbow Passing SPA" },
-  { id: "wolves04", name: "2004 Timberwolves", level: "Medium", tags: ["Garnett", "Cassell", "Sprewell"], style: "Midrange Pullups & Intensity" },
-  { id: "heat06", name: "2006 Heat", level: "Medium", tags: ["Wade", "Shaq", "Walker"], style: "Heavy Freethrows & Dunk Attacks" },
-  { id: "celtics08", name: "2008 Celtics", level: "Hard", tags: ["Pierce", "Garnett", "Allen", "Rondo"], style: "Ubuntu High Defensive Rotation" },
-  { id: "magic09", name: "2009 Magic", level: "Medium", tags: ["Howard", "Turkoglu", "Lewis"], style: "Four-Out In & Inside Out Layout" },
-  { id: "mavs11", name: "2011 Mavericks", level: "Hard", tags: ["Nowitzki", "Terry", "Kidd", "Marion"], style: "Invaluable Zone D & Midrange fadeaway" },
-  { id: "rising_25", name: "Rising Stars 2025", level: "Legend", tags: ["Wembanyama", "Edwards", "Holmgren"], style: "Future Freak Athleticism" },
-  { id: "hoop_dreams", name: "Hoop Dreams Elite", level: "Legend", tags: ["Kobe", "Curry", "Jordan", "Durant"], style: "Pure Isolation Shot Creators" },
-  { id: "three_snipers", name: "Perimeter Snipers", level: "Medium", tags: ["Korver", "Kerr", "Miller", "Allen"], style: "Catch-and-Shoot Floaters Only" },
-  { id: "rim_beasts", name: "Paint Protectors", level: "Medium", tags: ["Gobert", "Wallace", "Ewing", "Howard"], style: "Block Parties & Offensive Boards" },
-  { id: "fast_demons", name: "Fast Break Demons", level: "Medium", tags: ["Morant", "Fox", "Westbrook"], style: "Coast-to-Coast Speeds & Layups" },
-  { id: "midrange_snipers", name: "Mid-Range Snipers", level: "Medium", tags: ["DeRozan", "Aldridge", "Pierce", "Wade"], style: "Turnaround Jumper Aesthetics" },
-  { id: "euro_elite", name: "Euro League Giants", level: "Hard", tags: ["Jokic", "Doncic", "Sabonis", "Porzingis"], style: "Passing IQ & Faceup Bigs" },
-  { id: "def_wall", name: "Defensive Steel Wall", level: "Hard", tags: ["Caruso", "Dort", "Smart", "Gobert"], style: "Full Court Press & Steals" },
-  { id: "point_gods", name: "Point Guard Wizards", level: "Medium", tags: ["Nash", "Paul", "Stockton", "Kidd"], style: "Elite Playmaking & Direct Assists" },
-  { id: "bounce_bros", name: "High Flying Bounce", level: "Easy", tags: ["Carter", "LaVine", "Gordon"], style: "Spectacular Dunks Only" },
-  { id: "grit_n_grind", name: "Grit and Grind Grizz", level: "Medium", tags: ["Conley", "Randolph", "Gasol"], style: "Muck Up the Play & Offense boards" },
-  { id: "sonics96", name: "1996 SuperSonics", level: "Hard", tags: ["Payton", "Kemp", "Schrempf"], style: "Alley-Oops & Full Court Traps" },
-  { id: "sixers83", name: "1983 Sixers", level: "Hard", tags: ["Malone", "Erving", "Cheeks"], style: "Physical Rebounding & Slashing" },
-  { id: "knicks94", name: "1994 Knicks", level: "Medium", tags: ["Ewing", "Starks", "Oakley"], style: "Physical Paints & Double Teams" },
-  { id: "blazers77", name: "1977 Trail Blazers", level: "Medium", tags: ["Walton", "Lucas", "Hollins"], style: "Pivote Outlet Passes & Rebounds" },
-  { id: "bullets78", name: "1978 Bullets", level: "Easy", tags: ["Hayes", "Dandridge", "Unseld"], style: "Two-Handed Chest Rebounds & Hooks" },
-  { id: "phx93", name: "1993 Suns", level: "Medium", tags: ["Barkley", "Johnson", "Majerle"], style: "High-Energy Post & Spot up Threes" },
-  { id: "pacers00", name: "2000 Pacers", level: "Easy", tags: ["Miller", "Rose", "Smits"], style: "Off-screen curling Threes" },
-  { id: "nets02", name: "2002 Nets", level: "Easy", tags: ["Kidd", "Martin", "Jefferson"], style: "Full Court breakaways" },
-  { id: "suns05", name: "2005 Suns (Seven Seconds)", level: "Hard", tags: ["Nash", "Stoudemire", "Marion"], style: "7 Seconds or Less Pick-N-Roll" },
-  { id: "lakers09", name: "2009 Lakers", level: "Hard", tags: ["Kobe", "Gasol", "Odom", "Fisher"], style: "Triangle Offense & Isolation Shot" },
-  { id: "thunder12", name: "2012 Thunder", level: "Hard", tags: ["Durant", "Westbrook", "Harden", "Ibaka"], style: "Isolating Young Heat Score" },
-  { id: "wolves24", name: "2024 Timberwolves", level: "Medium", tags: ["Edwards", "Towns", "Gobert"], style: "Perimeter Clamps & Rim Protection" },
-  { id: "knicks25", name: "2025 Knicks", level: "Medium", tags: ["Brunson", "Towns", "Hart"], style: "Hustle Rebounds & Drive-N-Kicks" },
-  { id: "clippers20", name: "2020 Clippers", level: "Medium", tags: ["Leonard", "George", "Harrell"], style: "Physical Midranges & Offbench scoring" },
-  { id: "all_legends", name: "Hall of Fame Legends", level: "Legend", tags: ["Jordan", "Kobe", "LeBron", "Shaq", "Magic"], style: "Pure Legend Tier Mastery" },
-  { id: "bench_warmers", name: "Undrafted Scrappers", level: "Easy", tags: ["Kerr", "Fisher", "Caruso"], style: "Fundamental Motion Basketball" }
+  { id: "bulls90s", name: "96 Bulls", level: "Legend", tags: ["Michael Jordan", "Scottie Pippen", "Dennis Rodman"], style: "Midrange Mastery & Lock Down Defence" },
+  { id: "warriors17", name: "17 Warriors", level: "Legend", tags: ["Stephen Curry", "Kevin Durant", "Andre Iguodala"], style: "Splashing pace & space 3PT fest" },
+  { id: "lakers01", name: "01 Lakers", level: "Legend", tags: ["Kobe Bryant", "Shaquille O'Neal", "Derek Fisher"], style: "Inside Out Force & Clutch" },
+  { id: "spurs14", name: "14 Spurs", level: "Hard", tags: ["Tim Duncan", "Tony Parker", "Manu Ginóbili"], style: "The Beautiful Game Passing Flow" },
+  { id: "heat13", name: "13 Heat", level: "Legend", tags: ["LeBron James", "Dwyane Wade", "Ray Allen"], style: "Fast Breaks & Aggressive Trap D" },
+  { id: "lakers20", name: "20 Lakers", level: "Hard", tags: ["LeBron James", "Anthony Davis", "Christian Wood"], style: "Physical Paints & Double-Double Dominance" },
+  { id: "nuggets23", name: "23 Nuggets", level: "Hard", tags: ["Nikola Jokić", "Jamal Murray", "Bobby Portis"], style: "High IQ Post passing off-cuts" },
+  { id: "pistons04", name: "04 Pistons", level: "Hard", tags: ["Chauncey Billups", "Ben Wallace", "Robert Horry"], style: "Gritty Brickwall Shot Protection" },
+  { id: "dreamteam", name: "90s Dream Team", level: "Legend", tags: ["Michael Jordan", "Magic Johnson", "Larry Bird", "Charles Barkley"], style: "Elite Legacy Supremacy" },
+  { id: "allstars", name: "Modern All-Stars", level: "Legend", tags: ["Luka Dončić", "Giannis Antetokounmpo", "Nikola Jokić", "Jayson Tatum"], style: "Positionless High Tempo Scoring" }
 ];
-
