@@ -1,0 +1,155 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Global Safety Net (Pillar 0)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Auth & Identity (Pillar 3)
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // User Profile Validation Helper (Pillar 2)
+    function isValidUserProfile(data) {
+      return data.uid == request.auth.uid
+        && data.email is string && data.email.size() <= 256
+        && (!('teamName' in data) || (data.teamName is string && data.teamName.size() <= 100))
+        && (!('themePreference' in data) || (data.themePreference == 'dark' || data.themePreference == 'light'))
+        && (!('coins' in data) || data.coins is int)
+        && (!('packsCount' in data) || data.packsCount is int)
+        && (!('hasClaimedStarterPack' in data) || data.hasClaimedStarterPack is bool)
+        && (!('wins' in data) || data.wins is int)
+        && (!('losses' in data) || data.losses is int)
+        && (!('totalMargin' in data) || data.totalMargin is int);
+    }
+
+    // UserCollectedCard Validation Helper
+    function isValidCollectedCard(data) {
+      return data.userId == request.auth.uid
+        && data.id is string && data.id.size() <= 128
+        && data.playerId is string && data.playerId.size() <= 128
+        && data.name is string && data.name.size() <= 100
+        && data.tier is string && (data.tier == 'Bronze' || data.tier == 'Silver' || data.tier == 'Gold' || data.tier == 'Legendary')
+        && data.overallRating is int && data.overallRating >= 50 && data.overallRating <= 100;
+    }
+
+    // SavedTeam Validation Helper
+    function isValidSavedTeam(data) {
+      return data.userId == request.auth.uid
+        && data.id is string && data.id.size() <= 128
+        && data.name is string && data.name.size() <= 100
+        && data.starters is list && data.starters.size() <= 5
+        && data.bench is list && data.bench.size() <= 3;
+    }
+
+    // GameResult Validation Helper
+    function isValidGameResult(data) {
+      return data.userId == request.auth.uid
+        && data.id is string && data.id.size() <= 128
+        && data.userScore is int && data.userScore >= 0 && data.userScore <= 300
+        && data.opponentScore is int && data.opponentScore >= 0 && data.opponentScore <= 300;
+    }
+
+    // CareerSave Validation Helper
+    function isValidCareerSave(data) {
+      return data.userId == request.auth.uid
+        && data.id is string && data.id.size() <= 128
+        && data.saveName is string && data.saveName.size() <= 150
+        && (!('coins' in data) || data.coins is int)
+        && (!('hasClaimedStarterPack' in data) || data.hasClaimedStarterPack is bool)
+        && (!('wins' in data) || data.wins is int)
+        && (!('losses' in data) || data.losses is int)
+        && (!('totalMargin' in data) || data.totalMargin is int)
+        && (!('division' in data) || data.division is int)
+        && (!('seasonNumber' in data) || data.seasonNumber is int)
+        && (!('seasonWins' in data) || data.seasonWins is int)
+        && (!('seasonLosses' in data) || data.seasonLosses is int)
+        && (!('seasonGamesPlayed' in data) || data.seasonGamesPlayed is int)
+        && (!('teamName' in data) || (data.teamName is string && data.teamName.size() <= 100))
+        && (!('starters' in data) || data.starters is list)
+        && (!('bench' in data) || data.bench is list)
+        && (!('userCards' in data) || data.userCards is list)
+        && (!('lastFiveGames' in data) || data.lastFiveGames is list)
+        && (!('winStreak' in data) || data.winStreak is int)
+        && (!('unlockedAchievements' in data) || data.unlockedAchievements is list)
+        && (!('challenges' in data) || data.challenges is list)
+        && (!('injuriesEnabled' in data) || data.injuriesEnabled is bool);
+    }
+
+    // MATCH user profiles
+    // Users need to see other user names for challenges lookup
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create: if isOwner(userId) && isValidId(userId);
+      allow update: if isOwner(userId) && (request.resource.data.uid == resource.data.uid);
+      allow delete: if false; // strictly prohibited
+    }
+
+    // MATCH user card collection
+    match /player_collection/{cardId} {
+      allow list, get: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.userId == request.auth.uid && request.resource.data.userId == request.auth.uid;
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // MATCH saved teams
+    // Users can read friend rosters for simulator matchups
+    match /saved_teams/{teamId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid && isValidId(teamId);
+      allow update: if isSignedIn() && resource.data.userId == request.auth.uid && request.resource.data.userId == request.auth.uid;
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // MATCH game history
+    // Current user has delete privilege to wipe history logs on demand
+    match /game_history/{gameId} {
+      allow list, get: if isSignedIn() && (resource.data.userId == request.auth.uid || resource.data.opponentId == request.auth.uid);
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid && isValidId(gameId);
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow update: if false; // immutable
+    }
+
+    // MATCH head to head matchup metrics
+    match /head_to_head/{matchupId} {
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || resource.data.opponentId == request.auth.uid);
+      allow create, update: if isSignedIn() && (request.resource.data.userId == request.auth.uid || request.resource.data.opponentId == request.auth.uid);
+      allow delete: if false;
+    }
+
+    // MATCH public leaderboards career aggregated logs
+    match /global_stats/{userId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow delete: if isSignedIn() && userId == request.auth.uid;
+    }
+
+    // MATCH private challenge matchrooms
+    match /challenges/{challengeId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.challengerId == request.auth.uid;
+      allow update: if isSignedIn() && (resource.data.challengerId == request.auth.uid || resource.data.opponentId == request.auth.uid || resource.data.opponentId == "any" || resource.data.opponentId == "");
+      allow delete: if isSignedIn() && resource.data.challengerId == request.auth.uid;
+    }
+
+    // MATCH career saves
+    match /career_saves/{saveId} {
+      allow list, get: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid && isValidCareerSave(request.resource.data) && isValidId(saveId);
+      allow update: if isSignedIn() && resource.data.userId == request.auth.uid && request.resource.data.userId == request.auth.uid && isValidCareerSave(request.resource.data);
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+  }
+}

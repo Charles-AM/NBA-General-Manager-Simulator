@@ -1,0 +1,203 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "User account information, career win/loss record, coins balance, packs list, and theme preferences",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "The unique user ID" },
+        "email": { "type": "string", "description": "User's email address" },
+        "username": { "type": "string", "description": "The displayed username" },
+        "themePreference": { "type": "string", "description": "Preferred UI theme ('dark' | 'light')" },
+        "coins": { "type": "integer", "description": "Currency used to purchase card packs" },
+        "packsCount": { "type": "integer", "description": "Number of unopened packs owned" },
+        "hasClaimedStarterPack": { "type": "boolean", "description": "Whether the user claimed their 6-card starting pack" },
+        "wins": { "type": "integer", "description": "Total games won" },
+        "losses": { "type": "integer", "description": "Total games lost" },
+        "totalMargin": { "type": "integer", "description": "Accumulated margin of victory" },
+        "teamName": { "type": "string", "description": "Custom name for the active team" },
+        "starters": { "type": "array", "description": "List of active 5 starting players" },
+        "bench": { "type": "array", "description": "List of active 3 bench players" },
+        "updatedAt": { "type": "string", "description": "Last updated UTC timestamp" }
+      },
+      "required": ["uid", "email"]
+    },
+    "UserCard": {
+      "title": "User Collected Player Card",
+      "description": "An acquired retro or active player card belonging to a user's Ultimate Team album",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique acquired card instance ID" },
+        "userId": { "type": "string", "description": "Owner userId" },
+        "playerId": { "type": "string", "description": "Original draftable player identifier" },
+        "name": { "type": "string", "description": "Full name of player" },
+        "era": { "type": "string", "description": "Player era (e.g. 1990s, Current)" },
+        "team": { "type": "string", "description": "NBA Team Abbreviation" },
+        "position": { "type": "string", "description": "Primary court position: PG, SG, SF, PF, C" },
+        "ppg": { "type": "number", "description": "Points average stats" },
+        "apg": { "type": "number", "description": "Assists average stats" },
+        "rpg": { "type": "number", "description": "Rebounds average stats" },
+        "fgPercent": { "type": "number", "description": "Field goal percentage percentage" },
+        "overallRating": { "type": "integer", "description": "Overall skill rating between 60-99" },
+        "tier": { "type": "string", "description": "Rarity: Bronze, Silver, Gold, Legendary" },
+        "dateAcquired": { "type": "string", "description": "UTC timestamp of when the user obtained the card" }
+      },
+      "required": ["id", "userId", "playerId", "name", "tier", "overallRating", "dateAcquired"]
+    },
+    "SavedTeam": {
+      "title": "Saved Team",
+      "description": "A customized named lineup constructed by a user with calculated chemistry rating",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique team ID" },
+        "userId": { "type": "string", "description": "Owner uid" },
+        "name": { "type": "string", "description": "Roster name given by user" },
+        "starters": { "type": "array", "description": "Array of 5 players" },
+        "bench": { "type": "array", "description": "Array of 3 players" },
+        "chemistryRating": { "type": "integer", "description": "Calculated Chemistry % of this save" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" }
+      },
+      "required": ["id", "userId", "name", "starters", "bench", "chemistryRating", "createdAt"]
+    },
+    "GameResult": {
+      "title": "Game Simulation Result",
+      "description": "Results, player performances, play-by-play narrative, and leaders of a simulated game",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique game ID" },
+        "userId": { "type": "string", "description": "User ID of simulated team owner" },
+        "opponentId": { "type": "string", "description": "User ID of friend or 'cpu'" },
+        "userTeamName": { "type": "string", "description": "Name of own team" },
+        "opponentTeamName": { "type": "string", "description": "Name of opponent team" },
+        "userScore": { "type": "integer", "description": "User scored points" },
+        "opponentScore": { "type": "integer", "description": "Opponent scored points" },
+        "mvpName": { "type": "string", "description": "MVP's full name" },
+        "mvpStats": { "type": "object", "description": "MVP performance box score stats" },
+        "playerStats": { "type": "array", "description": "All squad performance metrics" },
+        "opponentStats": { "type": "array", "description": "Opponent performance metrics" },
+        "playByPlay": { "type": "array", "description": "The log list narrative of simulation events" },
+        "date": { "type": "string", "description": "Standard timestamp for querying" },
+        "createdAt": { "type": "string", "description": "Vite timestamp creation text" }
+      },
+      "required": ["id", "userId", "userScore", "opponentScore", "createdAt"]
+    },
+    "FriendMatchup": {
+      "title": "Head to Head Matchup record",
+      "description": "Tracks historic wins, losses and latest records versus a specific online friend",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Composite key: userId_opponentId" },
+        "userId": { "type": "string", "description": "Current player UID" },
+        "opponentId": { "type": "string", "description": "Opponent player UID" },
+        "userWins": { "type": "integer", "description": "Wins count over opponent" },
+        "opponentWins": { "type": "integer", "description": "Losses count to opponent" },
+        "lastPlayed": { "type": "string", "description": "Date of latest face-off" }
+      },
+      "required": ["id", "userId", "opponentId", "userWins", "opponentWins"]
+    },
+    "GlobalStats": {
+      "title": "Global Stats career aggregated logs",
+      "description": "Total points, assists and single-game landmarks aggregated for leaderboards",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "User tracking identifier" },
+        "username": { "type": "string", "description": "Email or display name" },
+        "careerPoints": { "type": "integer", "description": "Career total scored points across simulated games" },
+        "careerAssists": { "type": "integer", "description": "Career total assists recorded" },
+        "careerRebounds": { "type": "integer", "description": "Career total rebounds grabbed" },
+        "highestScore": { "type": "integer", "description": "Single game highest score by a single player" },
+        "highestAssists": { "type": "integer", "description": "Single game highest assists by a single player font" },
+        "winPercentage": { "type": "number", "description": "Win percent scaled from 0-100" },
+        "gamesPlayed": { "type": "integer", "description": "Count of total simulated games played" }
+      },
+      "required": ["userId", "username"]
+    },
+    "PrivateChallenge": {
+      "title": "Private Invite Challengers",
+      "description": "Active lobby inviting a friend to run a real-time simulation matchup",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique Challenge Room ID" },
+        "challengerId": { "type": "string", "description": "UID of matching user triggering event" },
+        "challengerName": { "type": "string", "description": "Display name of initiator" },
+        "challengerTeam": { "type": "object", "description": "Initiator saved selection cards" },
+        "opponentId": { "type": "string", "description": "Target user UID (invited match) or 'any'" },
+        "opponentName": { "type": "string", "description": "Target displayed name" },
+        "opponentTeam": { "type": "object", "description": "Target saved selection cards" },
+        "status": { "type": "string", "description": "pending | accepted | declined | completed" },
+        "userScore": { "type": "integer", "description": "Challenger simulation score" },
+        "opponentScore": { "type": "integer", "description": "Competitor simulation score" },
+        "winnerId": { "type": "string", "description": "Match winner UID" },
+        "createdAt": { "type": "string", "description": "Lobby creation" },
+        "acceptedAt": { "type": "string", "description": "Lobby accept" }
+      },
+      "required": ["id", "challengerId", "challengerName", "status", "createdAt"]
+    },
+    "CareerSave": {
+      "title": "Franchise Career Save file",
+      "description": "Custom career franchise save data storing user coins, wins, losses, division, roster, active challenges, and settings",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique save slot identifier" },
+        "userId": { "type": "string", "description": "The unique user ID owner of this save" },
+        "saveName": { "type": "string", "description": "Name given to this save slot" },
+        "coins": { "type": "integer", "description": "Coins balance in active save" },
+        "hasClaimedStarterPack": { "type": "boolean", "description": "Whether starter card pack was claimed" },
+        "wins": { "type": "integer", "description": "Overall career wins" },
+        "losses": { "type": "integer", "description": "Overall career losses" },
+        "totalMargin": { "type": "integer", "description": "Cumulative margins of victory and defeat" },
+        "division": { "type": "integer", "description": "Division tier (0=Rookie up to 5=GOAT)" },
+        "seasonNumber": { "type": "integer", "description": "Active season iteration" },
+        "seasonWins": { "type": "integer", "description": "Current season win count" },
+        "seasonLosses": { "type": "integer", "description": "Current season loss count" },
+        "seasonGamesPlayed": { "type": "integer", "description": "Games played in current season schedule" },
+        "teamName": { "type": "string", "description": "The customized franchise name" },
+        "starters": { "type": "array", "description": "Current 5 active starter players" },
+        "bench": { "type": "array", "description": "Current 3 active bench players" },
+        "userCards": { "type": "array", "description": "Total collected players owned in this franchise run" },
+        "lastFiveGames": { "type": "array", "description": "History of last five games ('W' or 'L')" },
+        "winStreak": { "type": "integer", "description": "Current head-to-head match win streak" },
+        "unlockedAchievements": { "type": "array", "description": "Unlocked trophy IDs list" },
+        "challenges": { "type": "array", "description": "Franchise objective goals mapping" },
+        "injuriesEnabled": { "type": "boolean", "description": "Toggle to simulate stamina and team physical state" },
+        "createdAt": { "type": "string", "description": "Save creation UTC timestamp" },
+        "updatedAt": { "type": "string", "description": "Save modification UTC timestamp" }
+      },
+      "required": ["id", "userId", "saveName", "coins", "hasClaimedStarterPack", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User information, current selected squad and coins balances"
+    },
+    "/player_collection/{cardId}": {
+      "schema": "UserCard",
+      "description": "All acquired Ultimate Team cards owned by individual players"
+    },
+    "/saved_teams/{teamId}": {
+      "schema": "SavedTeam",
+      "description": "Stored rosters preserved by user custom names"
+    },
+    "/game_history/{gameId}": {
+      "schema": "GameResult",
+      "description": "Mutable list of simulated game records per account user"
+    },
+    "/head_to_head/{matchupId}": {
+      "schema": "FriendMatchup",
+      "description": "Tracks historic head to head achievements versus fellow players"
+    },
+    "/global_stats/{userId}": {
+      "schema": "GlobalStats",
+      "description": "Aggregated career points and leader metrics displayed to the public"
+    },
+    "/challenges/{challengeId}": {
+      "schema": "PrivateChallenge",
+      "description": "Lobby slots inviting users to run interactive simulation matching"
+    },
+    "/career_saves/{saveId}": {
+      "schema": "CareerSave",
+      "description": "Aggregated user career save templates storing dynamic sandbox stats"
+    }
+  }
+}

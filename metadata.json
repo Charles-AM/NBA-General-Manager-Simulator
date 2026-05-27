@@ -1,0 +1,6 @@
+{
+  "name": "Basketball Team Simulator",
+  "description": "Hyper-realistic basketball team simulator with free sandbox play and multi-save career division leagues, built with Google Grounded Search.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
