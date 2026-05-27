@@ -64,7 +64,8 @@ import {
   ChevronLeft,
   Users as Users2,
   Trophy,
-  Sliders
+  Sliders,
+  ArrowLeft
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -72,6 +73,14 @@ export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [tab, setTab] = useState<"draft" | "packs" | "arena" | "history" | "leaders" | "settings">("draft");
+  const [previousTab, setPreviousTab] = useState<"draft" | "packs" | "arena" | "history" | "leaders" | "settings">("draft");
+
+  const handleSetTab = (newTab: "draft" | "packs" | "arena" | "history" | "leaders" | "settings") => {
+    if (tab !== "settings") {
+      setPreviousTab(tab);
+    }
+    setTab(newTab);
+  };
 
   // Roster States
   const [teamName, setTeamName] = useState("My Retro Ballers");
@@ -138,7 +147,7 @@ export default function App() {
 
   // Theme and settings states
   const [theme] = useState<"dark">("dark");
-  const [showTopSettings, setShowTopSettings] = useState(false);
+  const [settingsStatusMessage, setSettingsStatusMessage] = useState<string | null>(null);
   const [deleteConfirmationText, setDeleteConfirmationText] = useState("");
 
   useEffect(() => {
@@ -1723,9 +1732,9 @@ export default function App() {
 
             {/* Top Interactive Settings Panel Trigger */}
             <button
-              onClick={() => setShowTopSettings(!showTopSettings)}
+              onClick={() => handleSetTab("settings")}
               className={`border p-2.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
-                showTopSettings 
+                tab === "settings" 
                   ? "bg-[#f55a15] border-[#f55a15] text-black shadow-md glow-orange" 
                   : "bg-gray-800/40 hover:bg-gray-800 border-gray-850 text-gray-400 hover:text-white"
               }`}
@@ -1755,149 +1764,6 @@ export default function App() {
 
         </div>
 
-        {/* Centered Settings Dialog Box Backdrop and Modal */}
-        <AnimatePresence>
-          {showTopSettings && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setShowTopSettings(false)}
-              className="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 z-[9999]"
-            >
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 15 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 15 }}
-                transition={{ type: "spring", duration: 0.4 }}
-                onClick={(e) => e.stopPropagation()} // Prevent closing when clicking modal content
-                className="w-full max-w-xl md:max-w-2xl bg-[#0f1216] border border-gray-800 rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden text-left glass-panel"
-              >
-                {/* Court design accents */}
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-[#f55a15] to-amber-500" />
-                
-                <div className="flex items-center justify-between border-b border-gray-850 pb-4 mb-5">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-[#f55a15]/10 p-2 rounded-xl border border-[#f55a15]/20">
-                      <Settings className="w-5 h-5 text-[#f55a15]" />
-                    </div>
-                    <div>
-                      <h3 className="font-display font-black text-white text-md sm:text-lg uppercase tracking-tight">Franchise & Sandbox Settings</h3>
-                      <p className="text-[10px] text-gray-400 font-sans mt-0.5">Customize game configurations and manage sandbox career state</p>
-                    </div>
-                  </div>
-                  <button 
-                    onClick={() => setShowTopSettings(false)}
-                    className="p-2 rounded-xl bg-gray-800/40 hover:bg-gray-800 text-gray-400 hover:text-white transition-all cursor-pointer border border-gray-850"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-
-                {/* Settings layout options */}
-                <div className="space-y-6">
-                  {/* 1. MATCH HISTORY & LOGS OPTIONS */}
-                  <div className="bg-black/45 border border-gray-850 p-5 rounded-2xl">
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                      <div>
-                        <span className="text-xs font-bold text-white block uppercase tracking-wide">Simulation Logs & History</span>
-                        <p className="text-xs text-gray-400 leading-normal mt-1 font-sans">Quickly navigate to past simulation feeds or wipe the logs clean.</p>
-                      </div>
-                      <div className="flex items-center gap-2.5 w-full sm:w-auto">
-                        <button
-                          onClick={() => {
-                            setTab("history");
-                            setShowTopSettings(false);
-                          }}
-                          className="flex-1 sm:flex-none px-4 py-2 bg-[#1b2026] hover:bg-gray-800 text-white rounded-xl text-xs font-mono border border-gray-850 transition-all uppercase cursor-pointer tracking-wider font-bold"
-                        >
-                          Logs Menu
-                        </button>
-                        <button
-                          onClick={async () => {
-                            if (confirm("Are you sure you want to purge all game match simulation records?")) {
-                              await handleClearHistory();
-                              alert("History erased successfully!");
-                            }
-                          }}
-                          className="flex-1 sm:flex-none px-4 py-2 bg-red-950/20 text-red-500 hover:bg-red-950/40 rounded-xl text-xs font-mono border border-red-900/30 transition-all uppercase cursor-pointer tracking-wider font-bold"
-                        >
-                          Reset Logs
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 2. AUDIO TOGGLE */}
-                  <div className="bg-black/45 border border-gray-850 p-5 rounded-2xl flex items-center justify-between gap-4">
-                    <div>
-                      <span className="text-xs font-bold text-white block uppercase tracking-wide">Voice Commentary Filter</span>
-                      <p className="text-xs text-gray-400 leading-normal mt-1 font-sans">Mute or unmute the text-to-speech commentary audio reader.</p>
-                    </div>
-                    <button 
-                      onClick={() => setSoundEnabled(!soundEnabled)}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono transition-all border font-bold cursor-pointer tracking-wider shrink-0 ${
-                        soundEnabled 
-                          ? "bg-emerald-950/20 text-emerald-400 border-emerald-950/40 hover:bg-emerald-950/40" 
-                          : "bg-red-950/20 text-red-500 border-red-950/40 hover:bg-red-950/40"
-                      }`}
-                    >
-                      {soundEnabled ? (
-                        <>
-                          <Volume2 className="w-4 h-4" />
-                          <span>ACTIVE VOICE ON</span>
-                        </>
-                      ) : (
-                        <>
-                          <VolumeX className="w-4 h-4" />
-                          <span>MUTED</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-
-                  {/* 3. DANGER ZONE - DELETE ACCOUNT */}
-                  <div className="border-t border-gray-850 pt-5">
-                    <span className="text-[11px] font-mono uppercase tracking-widest text-red-500 font-black block mb-2.5">🚨 Danger Zone: Sandbox Account & Progress</span>
-                    <div className="bg-red-950/10 border border-red-950/20 p-5 rounded-2xl space-y-4">
-                      <p className="text-xs text-gray-300 leading-relaxed font-sans">
-                        Permanently delete this sandbox user account, drafted rosters, acquired cards, coins, and custom saves. This action is irreversible.
-                      </p>
-                      <div className="space-y-3">
-                        <label className="text-[10px] font-mono uppercase tracking-wider text-gray-400 block leading-normal">
-                          To confirm, type <span className="text-red-400 font-bold font-mono px-2 py-0.5 bg-red-950/30 rounded">DELETE</span> in the box below:
-                        </label>
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                          <input 
-                            type="text"
-                            placeholder="DELETE"
-                            value={deleteConfirmationText}
-                            onChange={(e) => setDeleteConfirmationText(e.target.value)}
-                            className="bg-black/50 border border-gray-800 text-white rounded-xl px-4 py-2 text-sm font-mono focus:border-red-500 focus:outline-none flex-1 max-w-full uppercase tracking-wider"
-                          />
-                          <button 
-                            disabled={deleteConfirmationText !== "DELETE" || isProcessing}
-                            onClick={async () => {
-                              await handleDeleteAllDataExecution();
-                              setShowTopSettings(false);
-                            }}
-                            className={`px-5 py-2.5 rounded-xl text-xs font-display font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2 shrink-0 ${
-                              deleteConfirmationText === "DELETE" && !isProcessing
-                                ? "bg-red-650 hover:bg-red-700 text-white shadow-lg glow-red cursor-pointer"
-                                : "bg-gray-850 border border-gray-800 text-gray-500 cursor-not-allowed"
-                            }`}
-                          >
-                            <Trash2 className="w-4 h-4" /> {isProcessing ? "Purging Account..." : "Delete Account"}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </header>
 
       {/* GAME MODE WELCOME LANDING AREA (CHOOSE YOUR ARENA) */}
@@ -2091,7 +1957,7 @@ export default function App() {
                   <div className="w-full h-px bg-gray-800/60" />
 
                   <button 
-                    onClick={() => setTab("draft")} 
+                    onClick={() => handleSetTab("draft")} 
                     className={`p-3 rounded-xl transition-all cursor-pointer ${tab === "draft" ? "bg-[#f55a15] text-black shadow-md glow-orange" : "bg-[#1b2026] text-gray-400 hover:text-white"}`}
                     title="My Roster"
                   >
@@ -2100,7 +1966,7 @@ export default function App() {
 
                   {activeGameMode === "ultimate" && (
                     <button 
-                      onClick={() => setTab("packs")} 
+                      onClick={() => handleSetTab("packs")} 
                       className={`p-3 rounded-xl transition-all cursor-pointer ${tab === "packs" ? "bg-[#f55a15] text-black shadow-md glow-orange" : "bg-[#1b2026] text-gray-400 hover:text-white"}`}
                       title="Booster Packs & Fusion Store"
                     >
@@ -2109,7 +1975,7 @@ export default function App() {
                   )}
 
                   <button 
-                    onClick={() => setTab("arena")} 
+                    onClick={() => handleSetTab("arena")} 
                     className={`p-3 rounded-xl transition-all cursor-pointer ${tab === "arena" ? "bg-[#f55a15] text-black shadow-md glow-orange" : "bg-[#1b2026] text-gray-400 hover:text-white"}`}
                     title="Sim Arena Court"
                   >
@@ -2117,7 +1983,7 @@ export default function App() {
                   </button>
 
                   <button 
-                    onClick={() => setTab("history")} 
+                    onClick={() => handleSetTab("history")} 
                     className={`p-3 rounded-xl transition-all cursor-pointer ${tab === "history" ? "bg-[#f55a15] text-black shadow-md glow-orange" : "bg-[#1b2026] text-gray-400 hover:text-white"}`}
                     title="Simulation Archive History"
                   >
@@ -2125,11 +1991,19 @@ export default function App() {
                   </button>
 
                   <button 
-                    onClick={() => setTab("leaders")} 
+                    onClick={() => handleSetTab("leaders")} 
                     className={`p-3 rounded-xl transition-all cursor-pointer ${tab === "leaders" ? "bg-[#f55a15] text-black shadow-md glow-orange" : "bg-[#1b2026] text-gray-400 hover:text-white"}`}
                     title="Leaderboards"
                   >
                     <Award className="w-4 h-4" />
+                  </button>
+
+                  <button 
+                    onClick={() => handleSetTab("settings")} 
+                    className={`p-3 rounded-xl transition-all cursor-pointer ${tab === "settings" ? "bg-[#f55a15] text-black shadow-md glow-orange" : "bg-[#1b2026] text-gray-400 hover:text-white"}`}
+                    title="System Settings"
+                  >
+                    <Settings className="w-4 h-4" />
                   </button>
 
                   <div className="w-full h-px bg-gray-800/60 my-2" />
@@ -2210,7 +2084,7 @@ export default function App() {
                   
                   <nav className="space-y-1.5">
                     <button
-                      onClick={() => setTab("draft")}
+                      onClick={() => handleSetTab("draft")}
                       className={`w-full py-3 px-4 rounded-lg text-left text-xs font-display font-bold uppercase tracking-wider flex items-center gap-3 transition-colors cursor-pointer ${
                         tab === "draft" 
                           ? "bg-[#f55a15] text-black shadow-md glow-orange" 
@@ -2222,7 +2096,7 @@ export default function App() {
 
                     {activeGameMode === "ultimate" && (
                       <button
-                        onClick={() => setTab("packs")}
+                        onClick={() => handleSetTab("packs")}
                         className={`w-full py-3 px-4 rounded-lg text-left text-xs font-display font-bold uppercase tracking-wider flex items-center justify-between gap-3 transition-colors cursor-pointer ${
                           tab === "packs" 
                             ? "bg-[#f55a15] text-black shadow-md glow-orange" 
@@ -2241,7 +2115,7 @@ export default function App() {
                     )}
 
                     <button
-                      onClick={() => setTab("arena")}
+                      onClick={() => handleSetTab("arena")}
                       className={`w-full py-3 px-4 rounded-lg text-left text-xs font-display font-bold uppercase tracking-wider flex items-center gap-3 transition-colors cursor-pointer ${
                         tab === "arena" 
                           ? "bg-[#f55a15] text-black shadow-md glow-orange" 
@@ -2252,7 +2126,7 @@ export default function App() {
                     </button>
 
                     <button
-                      onClick={() => setTab("history")}
+                      onClick={() => handleSetTab("history")}
                       className={`w-full py-3 px-4 rounded-lg text-left text-xs font-display font-bold uppercase tracking-wider flex items-center gap-3 transition-colors cursor-pointer ${
                         tab === "history" 
                           ? "bg-[#f55a15] text-black shadow-md glow-orange" 
@@ -2263,7 +2137,7 @@ export default function App() {
                     </button>
 
                     <button
-                      onClick={() => setTab("leaders")}
+                      onClick={() => handleSetTab("leaders")}
                       className={`w-full py-3 px-4 rounded-lg text-left text-xs font-display font-bold uppercase tracking-wider flex items-center gap-3 transition-colors cursor-pointer ${
                         tab === "leaders" 
                           ? "bg-[#f55a15] text-black shadow-md glow-orange" 
@@ -2271,6 +2145,17 @@ export default function App() {
                       }`}
                     >
                       <Award className="w-4 h-4 shrink-0" /> Class Leaders
+                    </button>
+
+                    <button
+                      onClick={() => handleSetTab("settings")}
+                      className={`w-full py-3 px-4 rounded-lg text-left text-xs font-display font-bold uppercase tracking-wider flex items-center gap-3 transition-colors cursor-pointer ${
+                        tab === "settings" 
+                          ? "bg-[#f55a15] text-black shadow-md glow-orange" 
+                          : "bg-[#1b2026] text-gray-300 hover:text-white hover:bg-gray-850"
+                      }`}
+                    >
+                      <Settings className="w-4 h-4 shrink-0" /> System Settings
                     </button>
                   </nav>
 
@@ -2418,6 +2303,183 @@ export default function App() {
                 loading={gamesLoading}
                 onClearHistory={handleClearHistory}
               />
+            )}
+
+            {tab === "settings" && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-[#12161a] border border-gray-800 rounded-2xl p-6 md:p-8 space-y-6 relative overflow-hidden text-left glass-panel shadow-2xl"
+              >
+                {/* Court Design Accents */}
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-[#f55a15] to-amber-500" />
+                
+                {/* Header Row */}
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-850 pb-5">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-[#f55a15]/10 p-2.5 rounded-xl border border-[#f55a15]/20">
+                      <Settings className="w-6 h-6 text-[#f55a15]" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl md:text-2xl font-display font-black text-white uppercase tracking-tight">System Settings Panel</h2>
+                      <p className="text-xs text-gray-400 font-sans mt-1">Configure simulated variables, audio selectors, and database profiles</p>
+                    </div>
+                  </div>
+                  
+                  {/* BACK BUTTON */}
+                  <button 
+                    onClick={() => handleSetTab(previousTab || "draft")}
+                    className="px-4 py-2 text-xs font-mono font-bold bg-[#1b2026] hover:bg-gray-800 border border-gray-850 hover:border-gray-750 text-gray-300 hover:text-white rounded-xl transition-all flex items-center gap-2 cursor-pointer"
+                  >
+                    <ArrowLeft className="w-4 h-4" /> BACK TO SQUAD
+                  </button>
+                </div>
+
+                {/* Status Announcement Toast */}
+                {settingsStatusMessage && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="bg-emerald-950/25 border border-emerald-500/30 text-emerald-400 p-3.5 rounded-xl flex items-center gap-2.5 text-xs font-mono"
+                  >
+                    <Check className="w-4 h-4" />
+                    <span>{settingsStatusMessage}</span>
+                  </motion.div>
+                )}
+
+                {/* Main Settings Subsections */}
+                <div className="space-y-6">
+                  
+                  {/* 1. SIMULATION VOLUME CONTROL */}
+                  <div className="bg-black/25 border border-gray-850/80 p-5 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                      <span className="text-sm font-bold text-white block uppercase tracking-wide">Audio Commentary Stream</span>
+                      <p className="text-xs text-gray-400 leading-normal mt-1 max-w-xl font-sans">Toggle voice commentary readout engine during the basketball play-by-feed simulation runs.</p>
+                    </div>
+                    <button 
+                      onClick={() => {
+                        setSoundEnabled(!soundEnabled);
+                        setSettingsStatusMessage(`Audio Commentary successfully set to ${!soundEnabled ? "ON" : "OFF"}`);
+                        setTimeout(() => setSettingsStatusMessage(null), 3000);
+                      }}
+                      className={`flex items-center gap-2 px-4.5 py-2.5 rounded-xl text-xs font-mono transition-all border font-bold cursor-pointer tracking-wider shrink-0 w-full sm:w-auto justify-center ${
+                        soundEnabled 
+                          ? "bg-emerald-950/20 text-emerald-400 border-emerald-950/40 hover:bg-emerald-950/40" 
+                          : "bg-red-950/20 text-red-500 border-red-950/40 hover:bg-red-950/40"
+                      }`}
+                    >
+                      {soundEnabled ? (
+                        <>
+                          <Volume2 className="w-4 h-4 text-emerald-400" />
+                          <span>ACTIVE COMMENTARY ON</span>
+                        </>
+                      ) : (
+                        <>
+                          <VolumeX className="w-4 h-4 text-red-500" />
+                          <span>COMMENTARY MUTED</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                  {/* 2. MATCH SIMULATION ARCHIVES RESET */}
+                  <div className="bg-black/25 border border-gray-850/80 p-5 rounded-2xl">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                      <div>
+                        <span className="text-sm font-bold text-white block uppercase tracking-wide">Purge Simulation Archive History</span>
+                        <p className="text-xs text-gray-400 leading-normal mt-1 max-w-xl font-sans">Clear all simulation score records and log histories stored inside your cloud account.</p>
+                      </div>
+                      <button
+                        onClick={async () => {
+                          if (confirm("Are you sure you want to permanently erase all match history simulation records? This action cannot be undone.")) {
+                            try {
+                              await handleClearHistory();
+                              setSettingsStatusMessage("Match history purged successfully!");
+                              setTimeout(() => setSettingsStatusMessage(null), 3000);
+                            } catch (err) {
+                              alert("An error occurred trying to purge history documents.");
+                            }
+                          }
+                        }}
+                        className="px-4.5 py-2.5 bg-red-950/20 hover:bg-red-950/40 text-red-400 border border-red-900/40 rounded-xl text-xs font-mono transition-all font-bold uppercase cursor-pointer tracking-wider shrink-0 w-full sm:w-auto"
+                      >
+                        Reset Game Logs
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* 3. DANGER ZONE - FULL PURGE DELETE ZONE */}
+                  <div className="border-t border-gray-850 pt-5">
+                    <span className="text-xs font-mono uppercase tracking-widest text-red-500 font-extrabold block mb-2.5">🚨 Danger Zone: Sandbox Account & Progress</span>
+                    <div className="bg-red-950/10 border border-red-950/25 p-5 rounded-2xl space-y-4">
+                      <p className="text-xs text-gray-300 leading-relaxed font-sans">
+                        Permanently delete this sandbox user database profile, drafted rosters, acquired retro collections, coins, and custom saves. This action is completely irreversible.
+                      </p>
+                      <div className="space-y-3">
+                        <label className="text-[10px] font-mono uppercase tracking-wider text-gray-400 block leading-normal">
+                          To confirm, type <span className="text-red-400 font-bold font-mono px-2 py-0.5 bg-red-950/30 rounded">DELETE</span> in the box below:
+                        </label>
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                          <input 
+                            type="text"
+                            placeholder="DELETE"
+                            value={deleteConfirmationText}
+                            onChange={(e) => setDeleteConfirmationText(e.target.value)}
+                            className="bg-black/50 border border-gray-800 text-white rounded-xl px-4 py-2.5 text-sm font-mono focus:border-red-500 focus:outline-none flex-1 max-w-full uppercase tracking-wider"
+                          />
+                          <button 
+                            disabled={deleteConfirmationText !== "DELETE" || isProcessing}
+                            onClick={async () => {
+                              try {
+                                await handleDeleteAllDataExecution();
+                                setSettingsStatusMessage("Sandbox account data deleted successfully. Signing out...");
+                                setDeleteConfirmationText("");
+                                setTimeout(() => {
+                                  setSettingsStatusMessage(null);
+                                  handleSetTab("draft");
+                                }, 3000);
+                              } catch (err) {
+                                alert("Failed to complete full profile purge.");
+                              }
+                            }}
+                            className={`px-5 py-2.5 rounded-xl text-xs font-display font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2 shrink-0 ${
+                              deleteConfirmationText === "DELETE" && !isProcessing
+                                ? "bg-red-650 hover:bg-red-700 text-white shadow-lg glow-red cursor-pointer"
+                                : "bg-gray-850 border border-gray-800 text-gray-500 cursor-not-allowed"
+                            }`}
+                          >
+                            <Trash2 className="w-4 h-4 shadow-sm" /> {isProcessing ? "Purging..." : "Delete Account"}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* Save Changes button bar */}
+                <div className="border-t border-gray-850 pt-5 flex justify-end gap-3">
+                  <button
+                    onClick={() => handleSetTab(previousTab || "draft")}
+                    className="px-5 py-2.5 text-xs font-display font-extrabold uppercase tracking-widest text-gray-400 hover:text-white rounded-xl transition-all cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSettingsStatusMessage("Changes saved successfully!");
+                      setTimeout(() => {
+                        setSettingsStatusMessage(null);
+                        handleSetTab(previousTab || "draft");
+                      }, 1000);
+                    }}
+                    className="px-6 py-2.5 bg-[#f55a15] hover:bg-[#ff6e2e] text-black font-display font-black text-xs uppercase tracking-widest rounded-xl transition-all shadow-md glow-orange cursor-pointer"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+
+              </motion.div>
             )}
 
           </div>
