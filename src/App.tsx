@@ -137,25 +137,15 @@ export default function App() {
   const [isProcessing, setIsProcessing] = useState(false);
 
   // Theme and settings states
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [theme] = useState<"dark">("dark");
+  const [showTopSettings, setShowTopSettings] = useState(false);
   const [deleteConfirmationText, setDeleteConfirmationText] = useState("");
 
   useEffect(() => {
-    // Initial theme layout hydrate
+    // Always enforce dark theme
     document.documentElement.classList.add("dark");
+    document.documentElement.classList.remove("light");
   }, []);
-
-  const toggleTheme = () => {
-    if (theme === "dark") {
-      document.documentElement.classList.remove("dark");
-      document.documentElement.classList.add("light");
-      setTheme("light");
-    } else {
-      document.documentElement.classList.remove("light");
-      document.documentElement.classList.add("dark");
-      setTheme("dark");
-    }
-  };
 
   // Sync auth updates
   useEffect(() => {
@@ -1712,20 +1702,12 @@ export default function App() {
               </div>
             )}
 
-            {/* Dark & Light Theme Toggle Switcher */}
-            <button
-              onClick={toggleTheme}
-              className="bg-gray-800/40 hover:bg-gray-800 border border-gray-850 p-2.5 rounded-xl text-gray-400 hover:text-white transition-colors cursor-pointer"
-              title="Toggle Color Theme"
-            >
-              {theme === "dark" ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-400" />}
-            </button>
-
+            {/* Sound Mute/Unmute Fast Toggler */}
             {soundEnabled ? (
               <button
                 onClick={() => setSoundEnabled(false)}
                 className="bg-gray-800/40 hover:bg-gray-800 border border-gray-850 p-2.5 rounded-xl text-emerald-400 transition-colors cursor-pointer"
-                title="Mute sounds"
+                title="Mute commentary sounds"
               >
                 <Volume2 className="w-4 h-4" />
               </button>
@@ -1733,11 +1715,25 @@ export default function App() {
               <button
                 onClick={() => setSoundEnabled(true)}
                 className="bg-red-950/20 hover:bg-gray-800 border border-red-900/30 p-2.5 rounded-xl text-red-400 transition-colors cursor-pointer"
-                title="Unmute sounds"
+                title="Unmute commentary sounds"
               >
                 <VolumeX className="w-4 h-4" />
               </button>
             )}
+
+            {/* Top Interactive Settings Panel Trigger */}
+            <button
+              onClick={() => setShowTopSettings(!showTopSettings)}
+              className={`border p-2.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
+                showTopSettings 
+                  ? "bg-[#f55a15] border-[#f55a15] text-black shadow-md glow-orange" 
+                  : "bg-gray-800/40 hover:bg-gray-800 border-gray-850 text-gray-400 hover:text-white"
+              }`}
+              title="System Settings"
+            >
+              <Settings className="w-4 h-4" />
+              <span className="text-xs font-mono font-bold hidden sm:inline">SETTINGS</span>
+            </button>
 
             <div className="text-right hidden md:block">
               <p className="text-xs font-semibold text-white truncate max-w-[150px]">
@@ -1758,6 +1754,150 @@ export default function App() {
           </div>
 
         </div>
+
+        {/* Centered Settings Dialog Box Backdrop and Modal */}
+        <AnimatePresence>
+          {showTopSettings && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowTopSettings(false)}
+              className="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 z-[9999]"
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 15 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 15 }}
+                transition={{ type: "spring", duration: 0.4 }}
+                onClick={(e) => e.stopPropagation()} // Prevent closing when clicking modal content
+                className="w-full max-w-xl md:max-w-2xl bg-[#0f1216] border border-gray-800 rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden text-left glass-panel"
+              >
+                {/* Court design accents */}
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-[#f55a15] to-amber-500" />
+                
+                <div className="flex items-center justify-between border-b border-gray-850 pb-4 mb-5">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-[#f55a15]/10 p-2 rounded-xl border border-[#f55a15]/20">
+                      <Settings className="w-5 h-5 text-[#f55a15]" />
+                    </div>
+                    <div>
+                      <h3 className="font-display font-black text-white text-md sm:text-lg uppercase tracking-tight">Franchise & Sandbox Settings</h3>
+                      <p className="text-[10px] text-gray-400 font-sans mt-0.5">Customize game configurations and manage sandbox career state</p>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => setShowTopSettings(false)}
+                    className="p-2 rounded-xl bg-gray-800/40 hover:bg-gray-800 text-gray-400 hover:text-white transition-all cursor-pointer border border-gray-850"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {/* Settings layout options */}
+                <div className="space-y-6">
+                  {/* 1. MATCH HISTORY & LOGS OPTIONS */}
+                  <div className="bg-black/45 border border-gray-850 p-5 rounded-2xl">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                      <div>
+                        <span className="text-xs font-bold text-white block uppercase tracking-wide">Simulation Logs & History</span>
+                        <p className="text-xs text-gray-400 leading-normal mt-1 font-sans">Quickly navigate to past simulation feeds or wipe the logs clean.</p>
+                      </div>
+                      <div className="flex items-center gap-2.5 w-full sm:w-auto">
+                        <button
+                          onClick={() => {
+                            setTab("history");
+                            setShowTopSettings(false);
+                          }}
+                          className="flex-1 sm:flex-none px-4 py-2 bg-[#1b2026] hover:bg-gray-800 text-white rounded-xl text-xs font-mono border border-gray-850 transition-all uppercase cursor-pointer tracking-wider font-bold"
+                        >
+                          Logs Menu
+                        </button>
+                        <button
+                          onClick={async () => {
+                            if (confirm("Are you sure you want to purge all game match simulation records?")) {
+                              await handleClearHistory();
+                              alert("History erased successfully!");
+                            }
+                          }}
+                          className="flex-1 sm:flex-none px-4 py-2 bg-red-950/20 text-red-500 hover:bg-red-950/40 rounded-xl text-xs font-mono border border-red-900/30 transition-all uppercase cursor-pointer tracking-wider font-bold"
+                        >
+                          Reset Logs
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 2. AUDIO TOGGLE */}
+                  <div className="bg-black/45 border border-gray-850 p-5 rounded-2xl flex items-center justify-between gap-4">
+                    <div>
+                      <span className="text-xs font-bold text-white block uppercase tracking-wide">Voice Commentary Filter</span>
+                      <p className="text-xs text-gray-400 leading-normal mt-1 font-sans">Mute or unmute the text-to-speech commentary audio reader.</p>
+                    </div>
+                    <button 
+                      onClick={() => setSoundEnabled(!soundEnabled)}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono transition-all border font-bold cursor-pointer tracking-wider shrink-0 ${
+                        soundEnabled 
+                          ? "bg-emerald-950/20 text-emerald-400 border-emerald-950/40 hover:bg-emerald-950/40" 
+                          : "bg-red-950/20 text-red-500 border-red-950/40 hover:bg-red-950/40"
+                      }`}
+                    >
+                      {soundEnabled ? (
+                        <>
+                          <Volume2 className="w-4 h-4" />
+                          <span>ACTIVE VOICE ON</span>
+                        </>
+                      ) : (
+                        <>
+                          <VolumeX className="w-4 h-4" />
+                          <span>MUTED</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                  {/* 3. DANGER ZONE - DELETE ACCOUNT */}
+                  <div className="border-t border-gray-850 pt-5">
+                    <span className="text-[11px] font-mono uppercase tracking-widest text-red-500 font-black block mb-2.5">🚨 Danger Zone: Sandbox Account & Progress</span>
+                    <div className="bg-red-950/10 border border-red-950/20 p-5 rounded-2xl space-y-4">
+                      <p className="text-xs text-gray-300 leading-relaxed font-sans">
+                        Permanently delete this sandbox user account, drafted rosters, acquired cards, coins, and custom saves. This action is irreversible.
+                      </p>
+                      <div className="space-y-3">
+                        <label className="text-[10px] font-mono uppercase tracking-wider text-gray-400 block leading-normal">
+                          To confirm, type <span className="text-red-400 font-bold font-mono px-2 py-0.5 bg-red-950/30 rounded">DELETE</span> in the box below:
+                        </label>
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                          <input 
+                            type="text"
+                            placeholder="DELETE"
+                            value={deleteConfirmationText}
+                            onChange={(e) => setDeleteConfirmationText(e.target.value)}
+                            className="bg-black/50 border border-gray-800 text-white rounded-xl px-4 py-2 text-sm font-mono focus:border-red-500 focus:outline-none flex-1 max-w-full uppercase tracking-wider"
+                          />
+                          <button 
+                            disabled={deleteConfirmationText !== "DELETE" || isProcessing}
+                            onClick={async () => {
+                              await handleDeleteAllDataExecution();
+                              setShowTopSettings(false);
+                            }}
+                            className={`px-5 py-2.5 rounded-xl text-xs font-display font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2 shrink-0 ${
+                              deleteConfirmationText === "DELETE" && !isProcessing
+                                ? "bg-red-650 hover:bg-red-700 text-white shadow-lg glow-red cursor-pointer"
+                                : "bg-gray-850 border border-gray-800 text-gray-500 cursor-not-allowed"
+                            }`}
+                          >
+                            <Trash2 className="w-4 h-4" /> {isProcessing ? "Purging Account..." : "Delete Account"}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* GAME MODE WELCOME LANDING AREA (CHOOSE YOUR ARENA) */}
@@ -1992,14 +2132,6 @@ export default function App() {
                     <Award className="w-4 h-4" />
                   </button>
 
-                  <button 
-                    onClick={() => setTab("settings")} 
-                    className={`p-3 rounded-xl transition-all cursor-pointer ${tab === "settings" ? "bg-[#f55a15] text-black shadow-md glow-orange" : "bg-[#1b2026] text-gray-400 hover:text-white"}`}
-                    title="System Administration Settings"
-                  >
-                    <Settings className="w-4 h-4" />
-                  </button>
-
                   <div className="w-full h-px bg-gray-800/60 my-2" />
 
                   <button 
@@ -2139,17 +2271,6 @@ export default function App() {
                       }`}
                     >
                       <Award className="w-4 h-4 shrink-0" /> Class Leaders
-                    </button>
-
-                    <button
-                      onClick={() => setTab("settings")}
-                      className={`w-full py-3 px-4 rounded-lg text-left text-xs font-display font-bold uppercase tracking-wider flex items-center gap-3 transition-colors cursor-pointer ${
-                        tab === "settings" 
-                          ? "bg-[#f55a15] text-black shadow-md glow-orange" 
-                          : "bg-[#1b2026] text-gray-300 hover:text-white hover:bg-gray-850"
-                      }`}
-                    >
-                      <Settings className="w-4 h-4 shrink-0" /> Settings Cog
                     </button>
                   </nav>
 
@@ -2297,114 +2418,6 @@ export default function App() {
                 loading={gamesLoading}
                 onClearHistory={handleClearHistory}
               />
-            )}
-
-            {tab === "settings" && (
-              <div className="bg-[#12161a] border border-gray-800 rounded-xl p-6 space-y-6 relative overflow-hidden court-outline shadow-xl glass-panel text-left">
-                <div className="flex items-center gap-2.5 border-b border-gray-800 pb-4">
-                  <Settings className="w-6 h-6 text-[#f55a15]" />
-                  <div>
-                    <h2 className="text-xl font-display font-black text-white uppercase tracking-tight">System Settings</h2>
-                    <p className="text-xs text-gray-400">Manage audio performance, theme adjustments, and persistent database folders</p>
-                  </div>
-                </div>
-
-                {/* APPEARANCE SECTION */}
-                <div className="space-y-4">
-                  <h3 className="text-xs font-mono uppercase tracking-widest text-gray-400 font-bold block">1. Sound & Interactive Visual Themes</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-black/30 border border-gray-850 p-4 rounded-xl flex items-center justify-between">
-                      <div>
-                        <span className="text-xs font-semibold text-white block uppercase tracking-wide">Theme Color Switcher</span>
-                        <span className="text-[10px] text-gray-400 leading-normal">Toggle immediate dark (charcoal basketball) and light color skins</span>
-                      </div>
-                      <button 
-                        onClick={toggleTheme}
-                        className="flex items-center gap-2 px-3 py-2 bg-[#1b2026] text-white hover:bg-gray-800 border border-gray-850 rounded-lg text-[10px] font-mono transition-colors cursor-pointer"
-                      >
-                        {theme === "dark" ? (
-                          <>
-                            <Sun className="w-3.5 h-3.5 text-amber-500 animate-pulse" />
-                            <span>LIGHT VIEW</span>
-                          </>
-                        ) : (
-                          <>
-                            <Moon className="w-3.5 h-3.5 text-indigo-400" />
-                            <span>DARK VIEW</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
-
-                    <div className="bg-black/30 border border-gray-850 p-4 rounded-xl flex items-center justify-between">
-                      <div>
-                        <span className="text-xs font-semibold text-white block uppercase tracking-wide">Sound Commentary Toggle</span>
-                        <span className="text-[10px] text-[#f55a15] font-mono tracking-widest uppercase">Mute live court play sound effects</span>
-                      </div>
-                      <button 
-                        onClick={() => setSoundEnabled(!soundEnabled)}
-                        className={`flex items-center gap-2 px-3 py-2 rounded-lg text-[10px] font-mono transition-colors border cursor-pointer ${
-                          soundEnabled 
-                            ? "bg-emerald-950/20 text-emerald-400 border-emerald-950/40 hover:bg-emerald-950/40" 
-                            : "bg-red-950/20 text-red-500 border-red-950/40 hover:bg-red-950/40"
-                        }`}
-                      >
-                        {soundEnabled ? (
-                          <>
-                            <Volume2 className="w-3.5 h-3.5" />
-                            <span>解説 ON</span>
-                          </>
-                        ) : (
-                          <>
-                            <VolumeX className="w-3.5 h-3.5" />
-                            <span>COMMENTARY MUTED</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* DANGER DELETION ZONE */}
-                <div className="border-t border-gray-850 pt-6 space-y-4">
-                  <h3 className="text-xs font-mono uppercase tracking-widest text-red-500 font-bold block">🚨 Danger Zone (Administration)</h3>
-                  <div className="bg-red-950/10 border border-red-900/20 p-5 rounded-xl space-y-4">
-                    <div>
-                      <span className="text-xs font-bold text-red-400 block mb-1 uppercase tracking-wider">Permanently delete your career progress</span>
-                      <p className="text-xs text-gray-300 leading-relaxed font-sans">
-                        Permanently delete your career progress, saved teams, and game history. This action deletes all Firestore folder keys compiled under your user profile and resets the app state. **This is completely irreversible.**
-                      </p>
-                    </div>
-
-                    <div className="space-y-2.5">
-                      <label className="text-[11px] font-mono uppercase tracking-wider text-gray-400 block leading-normal">
-                        To authorize deletion, type <span className="text-red-400 font-bold font-mono px-1.5 py-0.5 bg-red-950/30 rounded">DELETE</span> in the text field below:
-                      </label>
-                      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                        <input 
-                          type="text"
-                          placeholder="DELETE"
-                          value={deleteConfirmationText}
-                          onChange={(e) => setDeleteConfirmationText(e.target.value)}
-                          className="bg-black/50 border border-gray-800 text-white rounded-lg px-4 py-2 text-xs font-mono tracking-widest focus:border-red-500 focus:outline-none flex-1 max-w-xs uppercase"
-                        />
-                        <button 
-                          disabled={deleteConfirmationText !== "DELETE" || isProcessing}
-                          onClick={handleDeleteAllDataExecution}
-                          className={`px-5 py-2.5 rounded-lg text-[11px] font-display font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${
-                            deleteConfirmationText === "DELETE" && !isProcessing
-                              ? "bg-red-650 hover:bg-red-700 text-white shadow-lg shadow-red-950/40 cursor-pointer"
-                              : "bg-gray-850 border border-gray-800 text-gray-500 cursor-not-allowed"
-                          }`}
-                        >
-                          <Trash2 className="w-3.5 h-3.5 animate-bounce" /> {isProcessing ? "Purging Files..." : "Delete All Data & Reset Sandbox"}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
             )}
 
           </div>

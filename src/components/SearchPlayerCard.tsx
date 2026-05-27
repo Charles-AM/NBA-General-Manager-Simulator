@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Player } from "../types";
 import { Search, Plus, ExternalLink, Sparkles, AlertCircle } from "lucide-react";
 import { getPlayerOverallAndTier } from "../data";
+import BasketballJersey from "./BasketballJersey";
 
 interface SearchPlayerCardProps {
   onDraft: (player: Player, slot: "starter" | "bench") => void;
@@ -138,11 +139,10 @@ export default function SearchPlayerCard({ onDraft, draftedIds }: SearchPlayerCa
         <div className="bg-court-gray border border-court-border rounded-lg p-5 animate-fade-in text-court-text-primary">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
             <div className="flex items-center gap-3">
-              <img 
-                src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(searchedPlayer.name)}`} 
-                alt={searchedPlayer.name} 
-                className="w-12 h-12 rounded-full bg-court-darkgray border border-court-border"
-                referrerPolicy="no-referrer"
+              <BasketballJersey 
+                name={searchedPlayer.name} 
+                tier={searchedPlayer.tier} 
+                className="w-12 h-12"
               />
               <div>
                 <span className="text-[10px] bg-[#f55a15]/10 text-[#f55a15] border border-[#f55a15]/20 font-mono tracking-widest px-2 py-0.5 rounded uppercase font-bold">

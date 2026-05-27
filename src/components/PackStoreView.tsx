@@ -3,6 +3,7 @@ import { Player, UserCard } from "../types";
 import { Coins, Sparkles, Flame, Star, ShoppingBag, Layers, AlertCircle, ArrowUpRight } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { PRELOADED_PLAYERS } from "../data";
+import BasketballJersey from "./BasketballJersey";
 
 interface PackStoreViewProps {
   coins: number;
@@ -283,11 +284,10 @@ export default function PackStoreView({
                       </div>
 
                       <div className="text-center my-auto space-y-1 flex flex-col items-center">
-                        <img 
-                          src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(p.name)}`} 
-                          alt={p.name} 
-                          className="w-12 h-12 rounded-full bg-court-gray border border-court-border mb-1"
-                          referrerPolicy="no-referrer"
+                        <BasketballJersey 
+                          name={p.name} 
+                          tier={p.tier} 
+                          className="w-12 h-12 mb-1"
                         />
                         <span className={`text-[10px] font-mono tracking-widest uppercase block ${textGradient}`}>
                           {p.tier}
@@ -543,7 +543,7 @@ export default function PackStoreView({
               No retro cards acquired yet! Claim your Starter Pack from the store to load initial cards.
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-3">
               {userCards.map((card, idx) => {
                 const borderClass = 
                   card.tier === "Legendary" ? "border-red-500/50" : 
@@ -573,11 +573,10 @@ export default function PackStoreView({
                       </div>
 
                       <div className="flex items-center gap-2 mt-1.5 mb-2">
-                        <img 
-                          src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(card.name)}`} 
-                          alt={card.name} 
-                          className="w-8 h-8 rounded-full bg-court-gray border border-court-border"
-                          referrerPolicy="no-referrer"
+                        <BasketballJersey 
+                          name={card.name} 
+                          tier={card.tier} 
+                          className="w-8 h-8"
                         />
                         <div className="min-w-0 flex-1">
                           <h4 className="font-display font-bold text-court-text-primary truncate leading-tight">{card.name}</h4>

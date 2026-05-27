@@ -59,7 +59,7 @@ export default function SimulationView({
 }: SimulationViewProps) {
   // Game Options
   const [gameMode, setGameMode] = useState<50 | 100>(50); // target score
-  const [difficulty, setDifficulty] = useState<"Easy" | "Medium" | "Hard">("Medium");
+  const [difficulty, setDifficulty] = useState<"Easy" | "Medium" | "Hard" | "Legend">("Medium");
   const [opponentTeamName, setOpponentTeamName] = useState("Crossover Wizards");
 
   // Roster drafted for opponent
@@ -80,6 +80,23 @@ export default function SimulationView({
   const [activeTab, setActiveTab] = useState<"narrative" | "box">("narrative");
   const feedEndRef = useRef<HTMLDivElement>(null);
 
+  // Speed options
+  const [simSpeed, setSimSpeed] = useState<"slow" | "normal" | "fast">("normal");
+  const simSpeedRef = useRef(simSpeed);
+  const timeoutRef = useRef<any>(null);
+  const playIndexRef = useRef(0);
+  const activeResultRef = useRef<GameResult | null>(null);
+
+  useEffect(() => {
+    simSpeedRef.current = simSpeed;
+  }, [simSpeed]);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
   // Check if roster is complete
   const isRosterComplete = starters.length === 5 && bench.length === 3;
 
@@ -95,10 +112,15 @@ export default function SimulationView({
       names = ["Reggie Miller", "Allen Iverson", "Steve Nash", "Dominique Wilkins", "Ray Allen", "Isiah Thomas", "Jayson Tatum", "Shai Gilgeous-Alexander"];
     } else if (difficulty === "Hard") {
       names = ["Michael Jordan", "Kobe Bryant", "LeBron James", "Stephen Curry", "Kevin Durant", "Shaquille O'Neal", "Tim Duncan", "Magic Johnson", "Larry Bird", "Nikola Jokić", "Giannis Antetokounmpo"];
+    } else if (difficulty === "Legend") {
+      names = ["Michael Jordan", "Kobe Bryant", "LeBron James", "Stephen Curry", "Kevin Durant", "Shaquille O'Neal", "Tim Duncan", "Magic Johnson", "Larry Bird", "Nikola Jokić", "Giannis Antetokounmpo", "Wilt Chamberlain", "Kareem Abdul-Jabbar", "Luka Dončić"];
     }
 
-    // Filter PRELOADED_PLAYERS that fit our difficulty
-    const matched = PRELOADED_PLAYERS.filter(p => p.tier === difficulty.toLowerCase());
+    // Filter PRELOADED_PLAYERS that fit our difficulty (Legend maps to Legendary tier)
+    const matched = PRELOADED_PLAYERS.filter(p => {
+      if (difficulty === "Legend") return p.tier.toLowerCase() === "legendary";
+      return p.tier.toLowerCase() === difficulty.toLowerCase();
+    });
     const pool = matched.length >= 8 ? matched : PRELOADED_PLAYERS.filter(p => names.includes(p.name));
     
     // Fallback to any if pool is too small
@@ -120,8 +142,11 @@ export default function SimulationView({
   const handleStartSimulation = async () => {
     if (!isRosterComplete) return;
 
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
     setStage("simulating");
     setSimulatedResult(null);
+    activeResultRef.current = null;
     setLiveFeed([]);
     setLiveScore({ user: 0, opponent: 0 });
     setCurrentQuarter(1);
@@ -140,14 +165,22 @@ export default function SimulationView({
       gameMode,
       difficulty
     );
+    activeResultRef.current = result;
 
-    // Stream plays with Framer Motion to build high suspense
     const totalPlaysCount = result.playByPlay.length;
-    let index = 0;
+    playIndexRef.current = 0;
+    setSimStep(0);
 
-    const interval = setInterval(() => {
-      if (index < totalPlaysCount) {
-        const play = result.playByPlay[index];
+    const SPEED_DELAYS = {
+      slow: 1000,
+      normal: 400,
+      fast: 50
+    };
+
+    const runStep = () => {
+      const idx = playIndexRef.current;
+      if (idx < totalPlaysCount) {
+        const play = result.playByPlay[idx];
         setLiveFeed((prev) => [...prev, play]);
         setCurrentQuarter(play.quarter);
         setLiveTime(play.timeRemaining);
@@ -161,18 +194,23 @@ export default function SimulationView({
           });
         }
 
-        index++;
-        setSimStep(index);
+        playIndexRef.current = idx + 1;
+        setSimStep(idx + 1);
 
         setTimeout(() => {
           feedEndRef.current?.scrollIntoView({ behavior: "smooth" });
         }, 15);
+
+        const currentDelay = SPEED_DELAYS[simSpeedRef.current];
+        timeoutRef.current = setTimeout(runStep, currentDelay);
       } else {
-        clearInterval(interval);
         setSimulatedResult(result);
         setStage("results");
       }
-    }, 400); // Ticking timing speed
+    };
+
+    const initialDelay = SPEED_DELAYS[simSpeedRef.current];
+    timeoutRef.current = setTimeout(runStep, initialDelay);
   };
 
   const saveToHistory = async () => {
@@ -253,8 +291,8 @@ export default function SimulationView({
                   <label className="text-xs text-gray-400 font-mono uppercase tracking-widest block mb-2">
                     Difficulty Level
                   </label>
-                  <div className="grid grid-cols-3 gap-1.5">
-                    {(["Easy", "Medium", "Hard"] as const).map((level) => (
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                    {(["Easy", "Medium", "Hard", "Legend"] as const).map((level) => (
                       <button
                         key={level}
                         onClick={() => setDifficulty(level)}
@@ -373,28 +411,46 @@ export default function SimulationView({
                 <p className="text-md md:text-xl font-display font-black text-white truncate">{teamName}</p>
               </div>
 
-              <div className="bg-[#090b0d] border border-gray-800 rounded-2xl px-8 py-4 shrink-0 text-center relative max-w-[220px] w-full">
-                <span className="text-[9px] bg-[#f55a15]/10 text-[#f55a15] font-mono px-2.5 py-0.5 rounded-full border border-[#f55a15]/20 animate-pulse uppercase block font-semibold mb-2">
-                  Q{currentQuarter} • {liveTime}
-                </span>
-                <div className="flex items-center justify-center gap-4 font-display text-4xl font-black tracking-mono text-white select-none">
-                  <motion.span
-                    key={liveScore.user}
-                    initial={{ scale: 1.25, color: "#f55a15" }}
-                    animate={{ scale: 1, color: "#ffffff" }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    {liveScore.user}
-                  </motion.span>
-                  <span className="text-gray-600 font-sans text-xl font-normal">:</span>
-                  <motion.span
-                    key={liveScore.opponent}
-                    initial={{ scale: 1.25, color: "#f55a15" }}
-                    animate={{ scale: 1, color: "#ffffff" }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    {liveScore.opponent}
-                  </motion.span>
+              <div className="flex flex-col items-center gap-2 shrink-0 max-w-[220px] w-full">
+                <div className="bg-[#090b0d] border border-gray-800 rounded-2xl px-8 py-4 text-center relative w-full">
+                  <span className="text-[9px] bg-[#f55a15]/10 text-[#f55a15] font-mono px-2.5 py-0.5 rounded-full border border-[#f55a15]/20 animate-pulse uppercase block font-semibold mb-2">
+                    Q{currentQuarter} • {liveTime}
+                  </span>
+                  <div className="flex items-center justify-center gap-4 font-display text-4xl font-black tracking-mono text-white select-none">
+                    <motion.span
+                      key={liveScore.user}
+                      initial={{ scale: 1.25, color: "#f55a15" }}
+                      animate={{ scale: 1, color: "#ffffff" }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {liveScore.user}
+                    </motion.span>
+                    <span className="text-gray-600 font-sans text-xl font-normal">:</span>
+                    <motion.span
+                      key={liveScore.opponent}
+                      initial={{ scale: 1.25, color: "#f55a15" }}
+                      animate={{ scale: 1, color: "#ffffff" }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {liveScore.opponent}
+                    </motion.span>
+                  </div>
+                </div>
+                {/* Dynamic Speed Selector */}
+                <div className="flex items-center gap-1.5 bg-[#090b0d]/90 border border-gray-800 p-1.5 rounded-xl w-full justify-center">
+                  {(["slow", "normal", "fast"] as const).map((spd) => (
+                    <button
+                      key={spd}
+                      onClick={() => setSimSpeed(spd)}
+                      className={`flex-1 py-1 text-[10px] rounded-lg font-mono font-black uppercase transition-all tracking-wider ${
+                        simSpeed === spd
+                          ? "bg-[#f55a15] text-black shadow-sm glow-orange"
+                          : "text-gray-400 hover:text-white hover:bg-gray-850"
+                      }`}
+                    >
+                      {spd}
+                    </button>
+                  ))}
                 </div>
               </div>
 
@@ -433,9 +489,40 @@ export default function SimulationView({
               <div ref={feedEndRef} />
             </div>
 
-            <div className="bg-[#1b2026] px-6 py-4 border-t border-gray-850 text-center text-xs text-gray-400 font-mono animate-pulse flex justify-center items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-[#f55a15] animate-ping" />
-              Compiling real-time basketball stats... Play {simStep} / {simStep + 10}
+            <div className="bg-[#1b2026] px-6 py-4 border-t border-gray-850 flex flex-col sm:flex-row justify-between items-center gap-3">
+              <div className="text-xs text-gray-400 font-mono flex items-center gap-2">
+                <div className="w-2.5 h-2.5 rounded-full bg-[#f55a15] animate-ping" />
+                <span>Live play-by-play feeding • Play {simStep} / {activeResultRef.current?.playByPlay.length || 100}</span>
+              </div>
+              
+              <button
+                type="button"
+                onClick={() => {
+                  if (timeoutRef.current) clearTimeout(timeoutRef.current);
+                  const resInstance = activeResultRef.current;
+                  if (resInstance) {
+                    setLiveFeed(resInstance.playByPlay);
+                    const lastPlay = resInstance.playByPlay[resInstance.playByPlay.length - 1];
+                    if (lastPlay) {
+                      setCurrentQuarter(lastPlay.quarter);
+                      setLiveTime(lastPlay.timeRemaining);
+                      const lastScore = lastPlay.score.split(" - ");
+                      if (lastScore.length === 2) {
+                        setLiveScore({
+                          user: parseInt(lastScore[0]),
+                          opponent: parseInt(lastScore[1])
+                        });
+                      }
+                    }
+                    setSimStep(resInstance.playByPlay.length);
+                    setSimulatedResult(resInstance);
+                    setStage("results");
+                  }
+                }}
+                className="px-4.5 py-2 bg-[#f55a15]/10 hover:bg-[#f55a15] text-[#f55a15] hover:text-black border border-[#f55a15]/20 rounded-xl text-xs font-mono font-extrabold uppercase tracking-widest transition-all cursor-pointer shadow-sm min-h-[44px] flex items-center justify-center"
+              >
+                ⏩ Skip to End
+              </button>
             </div>
           </motion.div>
         )}

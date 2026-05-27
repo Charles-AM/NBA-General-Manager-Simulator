@@ -354,6 +354,22 @@ export function simulateGame(
 
       let techMsg = `📢 TECHNICAL FOUL! ${offender.name} violently disputes a block/charge whistle, roaring at the referee's face!`;
       
+      // 2 techs or Flagrant 2 ejection
+      if (techCount >= 2 || Math.random() < 0.15) {
+        playerEjectedSet.add(offender.name);
+        techMsg += ` 🟥 EJECTION! Referee waves their arms and commands ${offender.name} to head to the locker room immediately!`;
+      }
+
+      // Push technical foul call first
+      playByPlay.push({
+        quarter: currentQuarter,
+        timeRemaining: timeStr,
+        description: techMsg,
+        score: `${userScore} - ${opponentScore}`,
+        type: "foul",
+        playerName: offender.name
+      });
+
       const freeThrowShooters = isOffenderUser ? opponentBoxStats : userBoxStats;
       const freeThrowSpecs = isOffenderUser ? allOpponentPlayers : allUserPlayers;
       const ftShooterIdx = pickActivePlayerIndexExcludingOut(freeThrowShooters, freeThrowSpecs);
@@ -363,29 +379,25 @@ export function simulateGame(
       const ftProb = (ftShooterSpec?.fgPercent || 78) / 100;
       const ftSuccess = Math.random() < ftProb;
 
+      let ftMsg = "";
       if (ftSuccess) {
         ftShooter.points += 1;
         if (isOffenderUser) opponentScore += 1;
         else userScore += 1;
-        techMsg += ` ${ftShooter.name} walks to the line and coolly sinks the technical throw.`;
+        ftMsg = `🎯 Technical Shootout: ${ftShooter.name} walks to the line and coolly sinks the technical throw! (+1 point)`;
       } else {
-        techMsg += ` ${ftShooter.name} misses the free throw off the side of the iron!`;
-      }
-
-      // 2 techs or Flagrant 2 ejection
-      if (techCount >= 2 || Math.random() < 0.15) {
-        playerEjectedSet.add(offender.name);
-        techMsg += ` 🟥 EJECTION! Referee waves their arms and commands ${offender.name} to head to the locker room immediately!`;
+        ftMsg = `❌ Technical Shootout: ${ftShooter.name} misses the free throw off the side of the iron!`;
       }
 
       playByPlay.push({
         quarter: currentQuarter,
         timeRemaining: timeStr,
-        description: techMsg,
+        description: ftMsg,
         score: `${userScore} - ${opponentScore}`,
-        type: "foul",
-        playerName: offender.name
+        type: ftSuccess ? "score" : "miss",
+        playerName: ftShooter.name
       });
+
       continue;
     }
 
@@ -409,18 +421,7 @@ export function simulateGame(
         phrase += ` ⚠️ FOULED OUT! ${defender.name} is directed to the bench with 6 fouls.`;
       }
 
-      // Award free throws since it is late game stop
-      const ft1Success = Math.random() < (shooterSpec.fgPercent / 100);
-      const ft2Success = Math.random() < (shooterSpec.fgPercent / 100);
-      let pt = 0;
-      if (ft1Success) pt++;
-      if (ft2Success) pt++;
-
-      shooter.points += pt;
-      userScore += pt;
-
-      phrase += ` The point guard steps up under immense pressure and makes ${pt} of 2 free throws!`;
-
+      // Push foul call first
       playByPlay.push({
         quarter: currentQuarter,
         timeRemaining: timeStr,
@@ -429,6 +430,30 @@ export function simulateGame(
         type: "foul",
         playerName: shooter.name
       });
+
+      // Award free throws since it is late game stop - 1 by 1!
+      const ftPct = (shooterSpec.fgPercent || 78) / 100;
+      for (let s = 1; s <= 2; s++) {
+        const ftSuccess = Math.random() < ftPct;
+        let ftMsg = "";
+        if (ftSuccess) {
+          shooter.points += 1;
+          userScore += 1; // Shooter is User, since it's user possession and CPU is fouling User
+          ftMsg = `🎯 Pressure Free Throw (${s}/2): ${shooter.name} steps up under immense pressure and sinks the clutch free throw! (+1 point)`;
+        } else {
+          ftMsg = `❌ Pressure Free Throw (${s}/2): ${shooter.name}'s shot rattles off the iron and misses!`;
+        }
+
+        playByPlay.push({
+          quarter: currentQuarter,
+          timeRemaining: timeStr,
+          description: ftMsg,
+          score: `${userScore} - ${opponentScore}`,
+          type: ftSuccess ? "score" : "miss",
+          playerName: shooter.name
+        });
+      }
+
       continue;
     }
 
@@ -577,6 +602,8 @@ export function simulateGame(
         }
       }
 
+      desc += ` (+${pointsScored} points)`;
+
       // Winding down clock commentary tag
       if (isWindingDown) {
         desc = `⏰ Shot clock expiring! ` + desc;
@@ -724,44 +751,47 @@ export function simulateGame(
       const isDoubleBonus = currentTeamFoulLimit >= 10;
       const isInPenalty = currentTeamFoulLimit >= 5;
 
-      if (isShootingFoul || isInPenalty) {
-        const shotsCount = (isThreePointPlaysTag(foulDesc) || shotCategory === "3PT") ? 3 : 2;
-        const penalText = isDoubleBonus ? "Double Bonus! " : (isInPenalty ? "Bonus! " : "Shooting foul! ");
-        
-        foulDesc += ` \n${penalText}${shooter.name} steps up to the charity stripe for ${shotsCount} free throws.`;
-
-        // free throw shots
-        const ftPct = (shooterSpec.fgPercent || 78) / 100;
-        let converted = 0;
-        for (let s = 0; s < shotsCount; s++) {
-          if (Math.random() < ftPct) {
-            converted++;
-          }
-        }
-
-        if (converted > 0) {
-          shooter.points += converted;
-          if (isUserPossession) {
-            userScore += converted;
-          } else {
-            opponentScore += converted;
-          }
-          foulDesc += ` Shooter sinks ${converted} of ${shotsCount} throws.`;
-        } else {
-          foulDesc += ` CLANK! Shooter completely misses all attempts in a devastating physical lapse!`;
-        }
-      } else {
-        foulDesc += ` Possession retained. Inbounds pass inside the sidelines.`;
-      }
+      const shootsFT = isShootingFoul || isInPenalty;
 
       playByPlay.push({
         quarter: currentQuarter,
         timeRemaining: timeStr,
-        description: foulDesc,
+        description: foulDesc + (shootsFT ? " (Free throws to follow)" : " (Possession retained. Inbounds pass inside the sidelines)"),
         score: `${userScore} - ${opponentScore}`,
         type: "foul",
         playerName: shooter.name
       });
+
+      if (shootsFT) {
+        const shotsCount = (isThreePointPlaysTag(foulDesc) || shotCategory === "3PT") ? 3 : 2;
+        const penalText = isDoubleBonus ? "Double Bonus! " : (isInPenalty ? "Bonus! " : "Shooting foul! ");
+        const ftPct = (shooterSpec.fgPercent || 78) / 100;
+
+        for (let s = 1; s <= shotsCount; s++) {
+          const ftSuccess = Math.random() < ftPct;
+          let ftMsg = "";
+          if (ftSuccess) {
+            shooter.points += 1;
+            if (isUserPossession) {
+              userScore += 1;
+            } else {
+              opponentScore += 1;
+            }
+            ftMsg = `🎯 ${penalText}Free Throw (${s}/${shotsCount}): ${shooter.name} steps up to the charity stripe and swishes it! (+1 point)`;
+          } else {
+            ftMsg = `❌ ${penalText}Free Throw (${s}/${shotsCount}): ${shooter.name}'s shot clanks hard of the back iron and misses!`;
+          }
+
+          playByPlay.push({
+            quarter: currentQuarter,
+            timeRemaining: timeStr,
+            description: ftMsg,
+            score: `${userScore} - ${opponentScore}`,
+            type: ftSuccess ? "score" : "miss",
+            playerName: shooter.name
+          });
+        }
+      }
     }
   }
 

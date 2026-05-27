@@ -3,6 +3,7 @@ import { Player, SavedTeam, UserCard } from "../types";
 import { Trash2, Shield, Award, RotateCcw, Edit2, Search, Save, FolderOpen, HeartHandshake, CheckSquare, XSquare, AlertCircle } from "lucide-react";
 import { PRELOADED_PLAYERS } from "../data";
 import { motion, AnimatePresence } from "motion/react";
+import BasketballJersey from "./BasketballJersey";
 
 interface RosterViewProps {
   starters: Player[];
@@ -328,7 +329,7 @@ export default function RosterView({
               No active starters selection signed to contract yet. Select players from the pool below.
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-3">
               {starters.map((player) => {
                 const isInjured = player.injuryRemainingGames !== undefined && player.injuryRemainingGames > 0;
                 return (
@@ -358,13 +359,12 @@ export default function RosterView({
                         </div>
                       </div>
 
-                      {/* DiceBear Portrait Avatar */}
+                      {/* Jersey representation */}
                       <div className="flex items-center gap-2.5 mt-3">
-                        <img 
-                          src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(player.name)}`} 
-                          alt={player.name} 
-                          className="w-10 h-10 rounded-full bg-court-gray border border-court-border"
-                          referrerPolicy="no-referrer"
+                        <BasketballJersey 
+                          name={player.name} 
+                          tier={player.tier} 
+                          className="w-10 h-10"
                         />
                         <div className="min-w-0 flex-1">
                           <h4 className="text-sm font-display font-black text-court-text-primary truncate">{player.name}</h4>
@@ -442,7 +442,7 @@ export default function RosterView({
               No bench players selected yet. Select players from the historical legends pool below.
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-3">
               {bench.map((player) => {
                 const isInjured = player.injuryRemainingGames !== undefined && player.injuryRemainingGames > 0;
                 return (
@@ -465,13 +465,12 @@ export default function RosterView({
                           )}
                         </div>
 
-                        {/* DiceBear Portrait Avatar */}
+                        {/* Jersey representation */}
                         <div className="flex items-center gap-2.5 mt-2.5">
-                          <img 
-                            src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(player.name)}`} 
-                            alt={player.name} 
-                            className="w-10 h-10 rounded-full bg-court-gray border border-court-border"
-                            referrerPolicy="no-referrer"
+                          <BasketballJersey 
+                            name={player.name} 
+                            tier={player.tier} 
+                            className="w-10 h-10"
                           />
                           <div className="min-w-0 flex-1">
                             <h4 className="text-sm font-display font-black text-court-text-primary truncate">{player.name}</h4>
@@ -617,7 +616,7 @@ export default function RosterView({
         )}
 
         {/* RESULTS GRID OF LEGENDS ROW */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 max-h-[450px] overflow-y-auto pr-1">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-3 max-h-[450px] overflow-y-auto pr-1">
           {filteredPlayers.map((p) => {
             const alreadyInRoster = allPlayers.some((i) => i.id === p.id);
             const borderAccent = 
@@ -657,13 +656,12 @@ export default function RosterView({
                     <span className="text-court-text-secondary uppercase tracking-widest">{p.team}</span>
                   </div>
                   
-                  {/* DiceBear Portrait Avatar */}
+                  {/* Jersey representation */}
                   <div className="flex items-center gap-2.5 mt-2">
-                    <img 
-                      src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(p.name)}`} 
-                      alt={p.name} 
-                      className="w-10 h-10 rounded-full bg-court-gray border border-court-border"
-                      referrerPolicy="no-referrer"
+                    <BasketballJersey 
+                      name={p.name} 
+                      tier={p.tier} 
+                      className="w-10 h-10"
                     />
                     <div className="min-w-0 flex-1">
                       <h4 className="text-xs font-display font-bold text-court-text-primary truncate">{p.name}</h4>

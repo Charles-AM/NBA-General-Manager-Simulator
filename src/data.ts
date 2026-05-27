@@ -1768,7 +1768,9 @@ export const OPPONENT_TEAMS = [
   { name: "Crossover Wizards", level: "Medium" },
   { name: "Three-Point Snipers", level: "Hard" },
   { name: "Rim Protector Beasts", level: "Hard" },
-  { name: "Fast Break Demons", level: "Medium" }
+  { name: "Fast Break Demons", level: "Medium" },
+  { name: "Championship Legends", level: "Legend" },
+  { name: "Dynasty Commanders", level: "Legend" }
 ];
 
 export const THEMED_OPPONENT_TEAMS = [
@@ -1781,5 +1783,16 @@ export const THEMED_OPPONENT_TEAMS = [
   { id: "nuggets23", name: "23 Nuggets", level: "Hard", tags: ["Nikola Jokić", "Jamal Murray", "Bobby Portis"], style: "High IQ Post passing off-cuts" },
   { id: "pistons04", name: "04 Pistons", level: "Hard", tags: ["Chauncey Billups", "Ben Wallace", "Robert Horry"], style: "Gritty Brickwall Shot Protection" },
   { id: "dreamteam", name: "90s Dream Team", level: "Legend", tags: ["Michael Jordan", "Magic Johnson", "Larry Bird", "Charles Barkley"], style: "Elite Legacy Supremacy" },
-  { id: "allstars", name: "Modern All-Stars", level: "Legend", tags: ["Luka Dončić", "Giannis Antetokounmpo", "Nikola Jokić", "Jayson Tatum"], style: "Positionless High Tempo Scoring" }
+  { id: "allstars", name: "Modern All-Stars", level: "Legend", tags: ["Luka Dončić", "Giannis Antetokounmpo", "Nikola Jokić", "Jayson Tatum"], style: "Positionless High Tempo Scoring" },
+  { id: "celtics86", name: "86 Celtics", level: "Legend", tags: ["Larry Bird", "Kevin McHale", "Robert Parish"], style: "Frontcourt Dominance & Pure Shooting" },
+  { id: "pistons89", name: "89 Bad Boys", level: "Legend", tags: ["Isiah Thomas", "Joe Dumars", "Dennis Rodman"], style: "Suffocating Defense & Full-court Intensity" },
+  { id: "rockets95", name: "95 Rockets", level: "Legend", tags: ["Hakeem Olajuwon", "Clyde Drexler", "Robert Horry"], style: "Hakeem post masterclass & Outside shooters" },
+  { id: "jazz98", name: "98 Jazz", level: "Hard", tags: ["John Stockton", "Karl Malone", "Jeff Hornacek"], style: "Infallible Pick & Roll & Physical Defense" },
+  { id: "celtics08", name: "08 Celtics", level: "Hard", tags: ["Paul Pierce", "Kevin Garnett", "Ray Allen"], style: "Unbending Championship Unity & Intensity" },
+  { id: "thunder12", name: "12 Thunder", level: "Hard", tags: ["Kevin Durant", "Russell Westbrook", "James Harden"], style: "Immense Athletics & Isolation Scoring" },
+  { id: "cavs16", name: "16 Cavaliers", level: "Legend", tags: ["LeBron James", "Kyrie Irving", "Kevin Love"], style: "Historic Clutch Isolation & Perimeter Play" },
+  { id: "suns05", name: "05 Suns", level: "Hard", tags: ["Steve Nash", "Amar'e Stoudemire", "Shawn Marion"], style: "Seven Seconds or Less High-Octane Offense" },
+  { id: "mavs11", name: "11 Mavericks", level: "Hard", tags: ["Dirk Nowitzki", "Jason Kidd", "Tyson Chandler"], style: "Dirk's Turnarounds & Elite Zone Defense" },
+  { id: "raptors19", name: "19 Raptors", level: "Hard", tags: ["Kawhi Leonard", "Kyle Lowry", "Pascal Siakam"], style: "Unflappable Clutches & Defensive Versatility" },
+  { id: "celtics24", name: "24 Celtics", level: "Hard", tags: ["Jayson Tatum", "Jaylen Brown", "Jrue Holiday"], style: "Five-out Floor Spacing & Shut-down Perimeter" }
 ];
