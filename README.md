@@ -1,20 +1,18 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# NBA GENERAL MANGER CAREER SIMULATOR
 
-# Run and deploy your AI Studio app
+A single-player basketball simulation game where you draft real NBA players, build your ultimate team, open packs, and simulate 
 
-This contains everything you need to run your app locally.
+## 🎮 Features
 
-View your app in AI Studio: https://ai.studio/apps/2e090167-bf5d-47a9-9a84-c452c81f173a
+- **Free Draft Mode** - Draft any player from 100+ real NBA legends and stars. Play against themed teams (96 Bulls, 17 Warriors, etc.)
+- **Ultimate Squad Mode** - Open packs, collect cards, earn coins, and climb divisions from Rookie to GOAT
+- **Realistic Simulation** - Full play-by-play with fouls, ejections, fatigue, and shot variety
+- **Team Leaders** - Track points, assists, and rebounds leaders for your squad
+- **Game History** - Complete match history with MVPs and final scores
 
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Built With
+- React
+- TypeScript
+- Firebase (Authentication + Firestore)
+- Tailwind CSS
+- Framer Motion
