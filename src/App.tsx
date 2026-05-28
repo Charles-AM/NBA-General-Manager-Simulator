@@ -27,7 +27,6 @@ import { Player, GameResult, SavedTeam, UserProfile, UserCard, CareerSave, Caree
 import { PRELOADED_PLAYERS } from "./data";
 
 // Subcomponents import
-import SearchPlayerCard from "./components/SearchPlayerCard";
 import RosterView from "./components/RosterView";
 import SimulationView from "./components/SimulationView";
 import HistoryList from "./components/HistoryList";
@@ -2191,128 +2190,14 @@ export default function App() {
           {/* Primary page contents workspace panel */}
           <div className={`${sidebarCollapsed ? "lg:col-span-11" : "lg:col-span-9"} space-y-6 transition-all duration-300`}>
             
-            {activeGameMode === "ultimate" && !activeSaveId ? (
-              <div className="space-y-6 animate-fade-in">
-                {tab !== "draft" && (
-                  <div className="bg-amber-950/20 border border-amber-900/30 text-amber-200 text-xs px-4 py-3 rounded-xl flex items-center gap-2.5 font-sans">
-                    <span>⚠️ <b>Franchise Required:</b> Define or load an active Career Franchise Save in the main tab to browse the {tab} arena!</span>
-                  </div>
-                )}
-                <CareerSavesHub
-                  careerSaves={careerSaves}
-                  loading={loadingSaves}
-                  onLoadSave={handleLoadSave}
-                  onCreateNewSave={handleCreateNewSave}
-                  onDeleteSave={handleDeleteSaveFile}
-                />
-              </div>
-            ) : (
-              <>
-                {tab === "draft" && (
-                  <div className="space-y-6">
-                    {/* Draft with player search and pre-set selects */}
-                    <SearchPlayerCard onDraft={handleDraftPlayer} draftedIds={draftedIds} />
-                    <RosterView
-                      starters={starters}
-                      bench={bench}
-                      teamName={teamName}
-                      onRemove={handleRemovePlayer}
-                      onUpdateTeamName={handleUpdateTeamName}
-                      onAddFromPreloaded={handleDraftPlayer}
-                      onAutoDraft={handleAutoDraft}
-                      onClearRoster={handleClearRoster}
-                      onSaveTeam={handleSaveTeam}
-                      savedTeams={savedTeams}
-                      onLoadTeam={handleLoadTeam}
-                      onDeleteSavedTeam={handleDeleteSavedTeam}
-                      isSaveLoading={isSaveLoading}
-                      userCards={userCards}
-                      activeGameMode={activeGameMode}
-                    />
-                  </div>
-                )}
-              </>
-            )}
-
-            {tab === "packs" && activeGameMode === "ultimate" && (
-              <PackStoreView
-                coins={coins}
-                userCards={userCards}
-                hasClaimedStarterPack={hasClaimedStarterPack}
-                onClaimStarterPack={handleClaimStarterPack}
-                onPurchasePack={async (packType) => {
-                  let cost = 100;
-                  if (packType === "silver") cost = 300;
-                  if (packType === "gold") cost = 600;
-                  if (packType === "legendary") cost = 1500;
-
-                  let tierTarget: "Standard" | "Elite" = "Standard";
-                  if (packType === "gold" || packType === "legendary") tierTarget = "Elite";
-
-                  await handlePurchasePack(cost, tierTarget);
-                }}
-                onTradeUp={async (tierToSacrifice) => {
-                  // Sacrifices exactly 5 duplicates
-                  const getDuplicatesByTier = (tier: "Bronze" | "Silver" | "Gold"): UserCard[] => {
-                    const counts: Record<string, UserCard[]> = {};
-                    userCards.forEach(card => {
-                      if (card.tier === tier) {
-                        counts[card.playerId] = counts[card.playerId] || [];
-                        counts[card.playerId].push(card);
-                      }
-                    });
-
-                    const duplicates: UserCard[] = [];
-                    Object.values(counts).forEach(cardsList => {
-                      if (cardsList.length > 1) {
-                        duplicates.push(...cardsList.slice(1));
-                      }
-                    });
-                    return duplicates;
-                  };
-
-                  const targetDups = getDuplicatesByTier(tierToSacrifice);
-                  if (targetDups.length < 5) return;
-
-                  const toSacrifice = targetDups.slice(0, 5);
-                  const nextTier = tierToSacrifice === "Bronze" ? "Silver" : (tierToSacrifice === "Silver" ? "Gold" : "Legendary");
-                  await handleTradeUpDuplicateCards(toSacrifice, nextTier);
-                }}
-                isProcessing={isProcessing}
-              />
-            )}
-
-            {tab === "arena" && (
-              <SimulationView
-                userId={user.uid}
-                teamName={teamName}
-                starters={starters}
-                bench={bench}
-                onSaveGameRecord={handleSaveGameRecord}
-                onResetToDraft={() => setTab("draft")}
-              />
-            )}
-
-            {tab === "history" && (
-              <HistoryList games={games} loading={gamesLoading} />
-            )}
-
-            {tab === "leaders" && (
-              <LeadersView
-                games={games}
-                loading={gamesLoading}
-                onClearHistory={handleClearHistory}
-              />
-            )}
-
-            {tab === "settings" && (
+            {tab === "settings" ? (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-[#12161a] border border-gray-800 rounded-2xl p-6 md:p-8 space-y-6 relative overflow-hidden text-left glass-panel shadow-2xl"
+                className="bg-[#12161a] border border-gray-850 rounded-2xl p-6 md:p-8 space-y-6 relative overflow-hidden text-left glass-panel shadow-2xl"
               >
                 {/* Court Design Accents */}
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-[#f55a15] to-amber-500" />
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#f55a15] via-red-500 to-amber-500" />
                 
                 {/* Header Row */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-850 pb-5">
@@ -2480,6 +2365,116 @@ export default function App() {
                 </div>
 
               </motion.div>
+            ) : activeGameMode === "ultimate" && !activeSaveId ? (
+              <div className="space-y-6 animate-fade-in">
+                {tab !== "draft" && (
+                  <div className="bg-amber-950/20 border border-amber-900/30 text-amber-200 text-xs px-4 py-3 rounded-xl flex items-center gap-2.5 font-sans">
+                    <span>⚠️ <b>Franchise Required:</b> Define or load an active Career Franchise Save in the main tab to browse the {tab} arena!</span>
+                  </div>
+                )}
+                <CareerSavesHub
+                  careerSaves={careerSaves}
+                  loading={loadingSaves}
+                  onLoadSave={handleLoadSave}
+                  onCreateNewSave={handleCreateNewSave}
+                  onDeleteSave={handleDeleteSaveFile}
+                />
+              </div>
+            ) : (
+              <>
+                {tab === "draft" && (
+                  <div className="space-y-6">
+                    <RosterView
+                      starters={starters}
+                      bench={bench}
+                      teamName={teamName}
+                      onRemove={handleRemovePlayer}
+                      onUpdateTeamName={handleUpdateTeamName}
+                      onAddFromPreloaded={handleDraftPlayer}
+                      onAutoDraft={handleAutoDraft}
+                      onClearRoster={handleClearRoster}
+                      onSaveTeam={handleSaveTeam}
+                      savedTeams={savedTeams}
+                      onLoadTeam={handleLoadTeam}
+                      onDeleteSavedTeam={handleDeleteSavedTeam}
+                      isSaveLoading={isSaveLoading}
+                      userCards={userCards}
+                      activeGameMode={activeGameMode}
+                    />
+                  </div>
+                )}
+              </>
+            )}
+
+            {tab === "packs" && activeGameMode === "ultimate" && (
+              <PackStoreView
+                coins={coins}
+                userCards={userCards}
+                hasClaimedStarterPack={hasClaimedStarterPack}
+                onClaimStarterPack={handleClaimStarterPack}
+                onPurchasePack={async (packType) => {
+                  let cost = 100;
+                  if (packType === "silver") cost = 300;
+                  if (packType === "gold") cost = 600;
+                  if (packType === "legendary") cost = 1500;
+
+                  let tierTarget: "Standard" | "Elite" = "Standard";
+                  if (packType === "gold" || packType === "legendary") tierTarget = "Elite";
+
+                  await handlePurchasePack(cost, tierTarget);
+                }}
+                onTradeUp={async (tierToSacrifice) => {
+                  // Sacrifices exactly 5 duplicates
+                  const getDuplicatesByTier = (tier: "Bronze" | "Silver" | "Gold"): UserCard[] => {
+                    const counts: Record<string, UserCard[]> = {};
+                    userCards.forEach(card => {
+                      if (card.tier === tier) {
+                        counts[card.playerId] = counts[card.playerId] || [];
+                        counts[card.playerId].push(card);
+                      }
+                    });
+
+                    const duplicates: UserCard[] = [];
+                    Object.values(counts).forEach(cardsList => {
+                      if (cardsList.length > 1) {
+                        duplicates.push(...cardsList.slice(1));
+                      }
+                    });
+                    return duplicates;
+                  };
+
+                  const targetDups = getDuplicatesByTier(tierToSacrifice);
+                  if (targetDups.length < 5) return;
+
+                  const toSacrifice = targetDups.slice(0, 5);
+                  const nextTier = tierToSacrifice === "Bronze" ? "Silver" : (tierToSacrifice === "Silver" ? "Gold" : "Legendary");
+                  await handleTradeUpDuplicateCards(toSacrifice, nextTier);
+                }}
+                isProcessing={isProcessing}
+              />
+            )}
+
+            {tab === "arena" && (
+              <SimulationView
+                userId={user.uid}
+                teamName={teamName}
+                starters={starters}
+                bench={bench}
+                onSaveGameRecord={handleSaveGameRecord}
+                onResetToDraft={() => setTab("draft")}
+              />
+            )}
+
+            {tab === "history" && (
+              <HistoryList games={games} loading={gamesLoading} />
+            )}
+
+            {tab === "leaders" && (
+              <LeadersView
+                games={games}
+                loading={gamesLoading}
+                onClearHistory={handleClearHistory}
+              />
             )}
 
           </div>

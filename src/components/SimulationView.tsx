@@ -186,12 +186,13 @@ export default function SimulationView({
         setLiveTime(play.timeRemaining);
 
         // Update core scoreboard
-        const scoreMatch = play.score.split(" - ");
+        const scoreMatch = play.score.split("-");
         if (scoreMatch.length === 2) {
-          setLiveScore({
-            user: parseInt(scoreMatch[0]),
-            opponent: parseInt(scoreMatch[1])
-          });
+          const uS = parseInt(scoreMatch[0].trim());
+          const oS = parseInt(scoreMatch[1].trim());
+          if (!isNaN(uS) && !isNaN(oS)) {
+            setLiveScore({ user: uS, opponent: oS });
+          }
         }
 
         playIndexRef.current = idx + 1;
@@ -416,24 +417,26 @@ export default function SimulationView({
                   <span className="text-[9px] bg-[#f55a15]/10 text-[#f55a15] font-mono px-2.5 py-0.5 rounded-full border border-[#f55a15]/20 animate-pulse uppercase block font-semibold mb-2">
                     Q{currentQuarter} • {liveTime}
                   </span>
-                  <div className="flex items-center justify-center gap-4 font-display text-4xl font-black tracking-mono text-white select-none">
-                    <motion.span
-                      key={liveScore.user}
-                      initial={{ scale: 1.25, color: "#f55a15" }}
+                  <div className="flex items-center justify-center gap-1 font-display text-4xl font-black text-white select-none">
+                    <motion.div
+                      key={`user-${liveScore.user}`}
+                      initial={{ scale: 1.15, color: "#f55a15" }}
                       animate={{ scale: 1, color: "#ffffff" }}
-                      transition={{ duration: 0.2 }}
+                      transition={{ duration: 0.15 }}
+                      className="w-16 text-center font-mono font-black tabular-nums tracking-tighter"
                     >
                       {liveScore.user}
-                    </motion.span>
-                    <span className="text-gray-600 font-sans text-xl font-normal">:</span>
-                    <motion.span
-                      key={liveScore.opponent}
-                      initial={{ scale: 1.25, color: "#f55a15" }}
+                    </motion.div>
+                    <span className="text-gray-600 font-sans text-xl font-normal w-4 text-center">:</span>
+                    <motion.div
+                      key={`opp-${liveScore.opponent}`}
+                      initial={{ scale: 1.15, color: "#f55a15" }}
                       animate={{ scale: 1, color: "#ffffff" }}
-                      transition={{ duration: 0.2 }}
+                      transition={{ duration: 0.15 }}
+                      className="w-16 text-center font-mono font-black tabular-nums tracking-tighter"
                     >
                       {liveScore.opponent}
-                    </motion.span>
+                    </motion.div>
                   </div>
                 </div>
                 {/* Dynamic Speed Selector */}
@@ -506,12 +509,13 @@ export default function SimulationView({
                     if (lastPlay) {
                       setCurrentQuarter(lastPlay.quarter);
                       setLiveTime(lastPlay.timeRemaining);
-                      const lastScore = lastPlay.score.split(" - ");
+                      const lastScore = lastPlay.score.split("-");
                       if (lastScore.length === 2) {
-                        setLiveScore({
-                          user: parseInt(lastScore[0]),
-                          opponent: parseInt(lastScore[1])
-                        });
+                        const uS = parseInt(lastScore[0].trim());
+                        const oS = parseInt(lastScore[1].trim());
+                        if (!isNaN(uS) && !isNaN(oS)) {
+                          setLiveScore({ user: uS, opponent: oS });
+                        }
                       }
                     }
                     setSimStep(resInstance.playByPlay.length);
