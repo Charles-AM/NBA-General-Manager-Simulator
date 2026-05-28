@@ -14,6 +14,10 @@
         "hasClaimedStarterPack": { "type": "boolean", "description": "Whether the user claimed their 6-card starting pack" },
         "wins": { "type": "integer", "description": "Total games won" },
         "losses": { "type": "integer", "description": "Total games lost" },
+        "totalGames": { "type": "integer", "description": "Total games completed" },
+        "totalWins": { "type": "integer", "description": "Total games won (alternate)" },
+        "totalLosses": { "type": "integer", "description": "Total games lost (alternate)" },
+        "lastGameDate": { "type": "string", "description": "Timestamp format of last gameplayed" },
         "totalMargin": { "type": "integer", "description": "Accumulated margin of victory" },
         "teamName": { "type": "string", "description": "Custom name for the active team" },
         "starters": { "type": "array", "description": "List of active 5 starting players" },
@@ -77,7 +81,11 @@
         "opponentStats": { "type": "array", "description": "Opponent performance metrics" },
         "playByPlay": { "type": "array", "description": "The log list narrative of simulation events" },
         "date": { "type": "string", "description": "Standard timestamp for querying" },
-        "createdAt": { "type": "string", "description": "Vite timestamp creation text" }
+        "createdAt": { "type": "string", "description": "Vite timestamp creation text" },
+        "gameMode": { "type": "string", "description": "Game mode choice played" },
+        "difficulty": { "type": "string", "description": "Difficulty setting of simulation" },
+        "userWin": { "type": "boolean", "description": "Whether the user won the matchup" },
+        "mvpPoints": { "type": "integer", "description": "Points score of MVP player" }
       },
       "required": ["id", "userId", "userScore", "opponentScore", "createdAt"]
     },
@@ -151,6 +159,8 @@
         "seasonWins": { "type": "integer", "description": "Current season win count" },
         "seasonLosses": { "type": "integer", "description": "Current season loss count" },
         "seasonGamesPlayed": { "type": "integer", "description": "Games played in current season schedule" },
+        "seasonRecord": { "type": "string", "description": "Season record display format" },
+        "currentSeasonGames": { "type": "array", "description": "List of current season game outcomes ('W' or 'L')" },
         "teamName": { "type": "string", "description": "The customized franchise name" },
         "starters": { "type": "array", "description": "Current 5 active starter players" },
         "bench": { "type": "array", "description": "Current 3 active bench players" },

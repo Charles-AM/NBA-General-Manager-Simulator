@@ -58,6 +58,8 @@ export interface CareerSave {
   seasonWins: number;
   seasonLosses: number;
   seasonGamesPlayed: number; // 0 to 12
+  seasonRecord?: string;
+  currentSeasonGames?: ("W" | "L")[];
   teamName: string;
   starters: Player[];
   bench: Player[];
@@ -117,6 +119,10 @@ export interface GameResult {
   date: string; // ISO date string
   createdAt: string;
   gameInjuriesOccurred?: any[];
+  gameMode?: string;
+  difficulty?: string;
+  userWin?: boolean;
+  mvpPoints?: number;
 }
 
 export interface SavedTeam {

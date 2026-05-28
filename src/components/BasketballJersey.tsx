@@ -137,9 +137,9 @@ export default function BasketballJersey({ name, tier, className = "w-12 h-12" }
         x="50"
         y="60"
         fill={textColor}
-        fontSize="25"
-        fontWeight="900"
-        fontFamily="sans-serif"
+        fontSize="24"
+        fontWeight="bold"
+        fontFamily="'Bebas Neue', 'Oswald', sans-serif"
         textAnchor="middle"
         dominantBaseline="middle"
       >

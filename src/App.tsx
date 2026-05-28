@@ -123,6 +123,7 @@ export default function App() {
   const [seasonWins, setSeasonWins] = useState<number>(0);
   const [seasonLosses, setSeasonLosses] = useState<number>(0);
   const [seasonGamesPlayed, setSeasonGamesPlayed] = useState<number>(0);
+  const [currentSeasonGames, setCurrentSeasonGames] = useState<("W" | "L")[]>([]);
   const [winStreak, setWinStreak] = useState<number>(0);
   const [lastFiveGames, setLastFiveGames] = useState<("W" | "L")[]>([]);
   const [unlockedAchievements, setUnlockedAchievements] = useState<string[]>([]);
@@ -235,6 +236,8 @@ export default function App() {
     unlockedAchievements?: string[];
     challenges?: CareerChallenge[];
     injuriesEnabled?: boolean;
+    seasonRecord?: string;
+    currentSeasonGames?: ("W" | "L")[];
   }) => {
     // Stage 1: Update local mirrors
     if (updates.coins !== undefined) setCoins(updates.coins);
@@ -247,6 +250,7 @@ export default function App() {
     if (updates.seasonWins !== undefined) setSeasonWins(updates.seasonWins);
     if (updates.seasonLosses !== undefined) setSeasonLosses(updates.seasonLosses);
     if (updates.seasonGamesPlayed !== undefined) setSeasonGamesPlayed(updates.seasonGamesPlayed);
+    if (updates.currentSeasonGames !== undefined) setCurrentSeasonGames(updates.currentSeasonGames);
     if (updates.teamName !== undefined) setTeamName(updates.teamName);
     if (updates.starters !== undefined) setUltimateStarters(updates.starters);
     if (updates.bench !== undefined) setUltimateBench(updates.bench);
@@ -275,6 +279,8 @@ export default function App() {
       seasonWins: updates.seasonWins !== undefined ? updates.seasonWins : seasonWins,
       seasonLosses: updates.seasonLosses !== undefined ? updates.seasonLosses : seasonLosses,
       seasonGamesPlayed: updates.seasonGamesPlayed !== undefined ? updates.seasonGamesPlayed : seasonGamesPlayed,
+      seasonRecord: updates.seasonRecord !== undefined ? updates.seasonRecord : `${updates.seasonWins !== undefined ? updates.seasonWins : seasonWins}-${updates.seasonLosses !== undefined ? updates.seasonLosses : seasonLosses}`,
+      currentSeasonGames: updates.currentSeasonGames !== undefined ? updates.currentSeasonGames : currentSeasonGames,
       teamName: updates.teamName !== undefined ? updates.teamName : teamName,
       starters: updates.starters !== undefined ? updates.starters : ultimateStarters,
       bench: updates.bench !== undefined ? updates.bench : ultimateBench,
@@ -346,6 +352,7 @@ export default function App() {
         setSeasonWins(s.seasonWins);
         setSeasonLosses(s.seasonLosses);
         setSeasonGamesPlayed(s.seasonGamesPlayed);
+        setCurrentSeasonGames(s.currentSeasonGames || []);
         setTeamName(s.teamName);
         setUltimateStarters(s.starters || []);
         setUltimateBench(s.bench || []);
@@ -435,6 +442,8 @@ export default function App() {
         seasonWins: 0,
         seasonLosses: 0,
         seasonGamesPlayed: 0,
+        seasonRecord: "0-0",
+        currentSeasonGames: [],
         teamName: customTeamName || "My Retro Ballers",
         starters: startSquad,
         bench: benchSquad,
@@ -462,6 +471,7 @@ export default function App() {
       setSeasonWins(0);
       setSeasonLosses(0);
       setSeasonGamesPlayed(0);
+      setCurrentSeasonGames([]);
       setTeamName(newSaveDoc.teamName);
       setUltimateStarters(startSquad);
       setUltimateBench(benchSquad);
@@ -732,12 +742,20 @@ export default function App() {
       // 1. Write game log matching game_history collection rules
       const finalRecord = {
         ...record,
-        gameMode: activeGameMode
+        gameMode: activeGameMode === "free" ? "free_draft" : "ultimate_squad",
+        difficulty: record.difficulty || "Medium",
+        userWin: record.userScore > record.opponentScore,
+        mvpName: record.mvp?.name || record.mvpName || "None",
+        mvpPoints: record.mvp?.points || 0,
+        createdAt: new Date().toISOString(),
+        date: new Date().toISOString()
       };
       await setDoc(doc(db, "game_history", record.id), finalRecord);
       
       // Update locally
       setGames((prev) => [finalRecord, ...prev]);
+
+      const didUserWin = record.userScore > record.opponentScore;
 
       if (activeGameMode === "ultimate" && activeSaveId) {
         // Did user win
@@ -914,6 +932,8 @@ export default function App() {
         let displayedSeasonNumber = seasonNumber;
         let seasonRecapReport: any | null = null;
 
+        let updatedSeasonGames = [...currentSeasonGames, didWin ? "W" as const : "L" as const];
+
         if (nextSeasonGamesPlayed >= 12) {
           // Season Completed! Award bonus matching active division bracket
           const divisionAwards = [200, 400, 700, 1100, 1600, 2500];
@@ -966,6 +986,7 @@ export default function App() {
           displayedSeasonNumber = seasonNumber + 1;
           finalSeasonWins = 0;
           finalSeasonLosses = 0;
+          updatedSeasonGames = [];
           
           // Trigger popups
           setTimeout(() => {
@@ -984,6 +1005,8 @@ export default function App() {
           seasonWins: finalSeasonWins,
           seasonLosses: finalSeasonLosses,
           seasonGamesPlayed: nextSeasonGamesPlayed >= 12 ? 0 : nextSeasonGamesPlayed,
+          seasonRecord: `${finalSeasonWins}-${finalSeasonLosses}`,
+          currentSeasonGames: updatedSeasonGames,
           starters: updatedStarters,
           bench: updatedBench,
           userCards: updatedCollection,
@@ -992,6 +1015,31 @@ export default function App() {
           unlockedAchievements: currentAchievements,
           challenges: currentChallenges
         });
+
+        // 9. Update User Records in Users Collection (FIX B)
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+        const currentStats = userSnap.exists() ? userSnap.data() : {};
+        
+        const nextTotalGames = (currentStats.totalGames || 0) + 1;
+        const nextTotalWins = (currentStats.totalWins || 0) + (didWin ? 1 : 0);
+        const nextTotalLosses = (currentStats.totalLosses || 0) + (didWin ? 0 : 1);
+
+        await setDoc(userRef, {
+          uid: user.uid,
+          email: user.email || "anonymous_user",
+          teamName,
+          starters: updatedStarters,
+          bench: updatedBench,
+          activeGameMode,
+          totalGames: nextTotalGames,
+          totalWins: nextTotalWins,
+          totalLosses: nextTotalLosses,
+          wins: nextTotalWins,
+          losses: nextTotalLosses,
+          lastGameDate: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        }, { merge: true });
 
         // Trigger visual alerts
         let alertMsg = `MATCH CONCLUDED!\nCoins Gained: +${calculatedEarned} COINS.`;
@@ -1018,7 +1066,15 @@ export default function App() {
         alert(alertMsg);
       } else {
         // Free practice mode: save record but no rewards/saves matches
-        await setDoc(doc(db, "users", user.uid), {
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+        const currentStats = userSnap.exists() ? userSnap.data() : {};
+        
+        const nextTotalGames = (currentStats.totalGames || 0) + 1;
+        const nextTotalWins = (currentStats.totalWins || 0) + (didUserWin ? 1 : 0);
+        const nextTotalLosses = (currentStats.totalLosses || 0) + (didUserWin ? 0 : 1);
+
+        await setDoc(userRef, {
           uid: user.uid,
           email: user.email || "anonymous_user",
           teamName,
@@ -1027,11 +1083,21 @@ export default function App() {
           freeStarters,
           freeBench,
           activeGameMode,
+          totalGames: nextTotalGames,
+          totalWins: nextTotalWins,
+          totalLosses: nextTotalLosses,
+          wins: nextTotalWins,
+          losses: nextTotalLosses,
+          lastGameDate: new Date().toISOString(),
           updatedAt: new Date().toISOString()
         }, { merge: true });
         
         alert("Simulated Game Finished & Saved! In Free Draft Mode, stats are loaded but no Coins are earned.");
       }
+
+      // Reload/Hydrate history and user data from Firestore to keep UI entirely fresh (FIX C)
+      await loadGameRecords(user.uid);
+      await loadUserData(user);
 
     } catch (err) {
       handleFirestoreError(err, OperationType.WRITE, path);
@@ -2021,7 +2087,7 @@ export default function App() {
                   {/* ACTIVE GAME MODE CONTAINER */}
                   <div className="bg-black/40 border border-gray-800/60 rounded-xl p-3 mb-2 relative overflow-hidden">
                     <span className="text-[8px] text-[#f55a15] font-mono uppercase tracking-wider block mb-1 font-bold">
-                      🏀 ACTIVE GAMES HUB
+                      🏀 LEAGUE STATION
                     </span>
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-display font-black text-white uppercase tracking-wide">
@@ -2078,7 +2144,7 @@ export default function App() {
                   )}
 
                   <span className="text-[9px] text-gray-500 font-mono uppercase tracking-widest block mb-2 font-semibold">
-                    CONTROLS BOARD
+                    FRANCHISE COMMAND
                   </span>
                   
                   <nav className="space-y-1.5">
@@ -2090,7 +2156,7 @@ export default function App() {
                           : "bg-[#1b2026] text-gray-300 hover:text-white hover:bg-gray-850"
                       }`}
                     >
-                      <Search className="w-4 h-4 shrink-0" /> My Squad
+                      <Search className="w-4 h-4 shrink-0" /> Active Roster
                     </button>
 
                     {activeGameMode === "ultimate" && (
@@ -2103,7 +2169,7 @@ export default function App() {
                         }`}
                       >
                         <span className="flex items-center gap-3">
-                          <Sparkles className="w-4 h-4 shrink-0" /> Packs & Fusion
+                          <Sparkles className="w-4 h-4 shrink-0" /> Pack Store & Fusion
                         </span>
                         {!hasClaimedStarterPack && (
                           <span className="text-[8px] bg-amber-500 text-black font-bold font-mono px-1.5 py-0.5 rounded uppercase animate-bounce">
@@ -2121,7 +2187,7 @@ export default function App() {
                           : "bg-[#1b2026] text-gray-300 hover:text-white hover:bg-gray-850"
                       }`}
                     >
-                      <Zap className="w-4 h-4 shrink-0" /> Play Sim Arena
+                      <Zap className="w-4 h-4 shrink-0" /> Gameday Simulation
                     </button>
 
                     <button
@@ -2132,7 +2198,7 @@ export default function App() {
                           : "bg-[#1b2026] text-gray-300 hover:text-white hover:bg-gray-850"
                       }`}
                     >
-                      <History className="w-4 h-4 shrink-0" /> Simulation Logs
+                      <History className="w-4 h-4 shrink-0" /> Simulation Archives
                     </button>
 
                     <button
@@ -2143,7 +2209,7 @@ export default function App() {
                           : "bg-[#1b2026] text-gray-300 hover:text-white hover:bg-gray-850"
                       }`}
                     >
-                      <Award className="w-4 h-4 shrink-0" /> Class Leaders
+                      <Award className="w-4 h-4 shrink-0" /> Hall Of Fame
                     </button>
 
                     <button
@@ -2154,7 +2220,7 @@ export default function App() {
                           : "bg-[#1b2026] text-gray-300 hover:text-white hover:bg-gray-850"
                       }`}
                     >
-                      <Settings className="w-4 h-4 shrink-0" /> System Settings
+                      <Settings className="w-4 h-4 shrink-0" /> Front Office
                     </button>
                   </nav>
 

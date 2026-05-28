@@ -1,29 +1,29 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bebas+Neue&family=Oswald:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 @import "tailwindcss";
 
 :root {
-  --color-bg-primary: #0c0f12;
-  --color-bg-secondary: #12161a;
-  --color-bg-tertiary: #1b2026;
-  --color-border: #1f2937;
-  --color-border-accent: rgba(245, 90, 21, 0.2);
-  --color-text-primary: #f3f4f6;
-  --color-text-secondary: #9ca3af;
-  --color-text-tertiary: #6b7280;
+  --color-bg-primary: #0a0c0f;
+  --color-bg-secondary: #0f1318;
+  --color-bg-tertiary: #171d24;
+  --color-border: #1e2630;
+  --color-border-accent: rgba(245, 90, 21, 0.25);
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #cbd5e1;
+  --color-text-tertiary: #94a3b8;
   --color-accent: #f55a15;
-  --color-accent-hover: #ff6e2e;
+  --color-accent-hover: #ff7332;
 
   /* Card colors */
-  --color-tier-bronze: #cd7f32;
-  --color-tier-silver: #c0c0c0;
-  --color-tier-gold: #ffd700;
-  --color-tier-legendary: #ff4500;
+  --color-tier-bronze: #df8a49;
+  --color-tier-silver: #cbd5e1;
+  --color-tier-gold: #fbbf24;
+  --color-tier-legendary: #ef4444;
 }
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Space Grotesk", sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-display: "Bebas Neue", sans-serif;
+  --font-mono: "Oswald", sans-serif;
 
   /* Custom NBA theme mapped to CSS properties */
   --color-[#12161a]: var(--color-bg-secondary);

@@ -1794,5 +1794,15 @@ export const THEMED_OPPONENT_TEAMS = [
   { id: "suns05", name: "05 Suns", level: "Hard", tags: ["Steve Nash", "Amar'e Stoudemire", "Shawn Marion"], style: "Seven Seconds or Less High-Octane Offense" },
   { id: "mavs11", name: "11 Mavericks", level: "Hard", tags: ["Dirk Nowitzki", "Jason Kidd", "Tyson Chandler"], style: "Dirk's Turnarounds & Elite Zone Defense" },
   { id: "raptors19", name: "19 Raptors", level: "Hard", tags: ["Kawhi Leonard", "Kyle Lowry", "Pascal Siakam"], style: "Unflappable Clutches & Defensive Versatility" },
-  { id: "celtics24", name: "24 Celtics", level: "Hard", tags: ["Jayson Tatum", "Jaylen Brown", "Jrue Holiday"], style: "Five-out Floor Spacing & Shut-down Perimeter" }
+  { id: "celtics24", name: "24 Celtics", level: "Hard", tags: ["Jayson Tatum", "Jaylen Brown", "Jrue Holiday"], style: "Five-out Floor Spacing & Shut-down Perimeter" },
+  { id: "sixers01", name: "01 Sixers", level: "Hard", tags: ["Allen Iverson", "Ben Wallace", "Aaron McKie"], style: "Iverson Iso Hero Ball & Rebounding Walls" },
+  { id: "lakers08", name: "08 Lakers", level: "Hard", tags: ["Kobe Bryant", "Lamar Odom", "Derek Fisher"], style: "Triangle Structure & Elite Scoring Drive" },
+  { id: "wolves24", name: "Current Wolves", level: "Hard", tags: ["Anthony Edwards", "Rudy Gobert", "Karl-Anthony Towns", "Naz Reid", "Donte DiVincenzo"], style: "Twin Towers Defense & Edwards Slam Antics" },
+  { id: "mavs24", name: "Current Mavericks", level: "Hard", tags: ["Luka Dončić", "Kyrie Irving"], style: "Two-man Iso Wizardry & Lethal Closing Clutches" },
+  { id: "suns24", name: "Current Suns", level: "Hard", tags: ["Kevin Durant", "Devin Booker", "Bradley Beal", "Grayson Allen"], style: "Lethal Midrange Scoring & Sharpshooting" },
+  { id: "bucks24", name: "Current Bucks", level: "Hard", tags: ["Giannis Antetokounmpo", "Damian Lillard", "Bobby Portis"], style: "Giannis Paint Dominance & Dame Time Firing" },
+  { id: "thunder24", name: "Current Thunder", level: "Hard", tags: ["Shai Gilgeous-Alexander", "Chet Holmgren", "Alex Caruso", "Luguentz Dort"], style: "SGA Smooth Mid-ranges & Elite Turnover Generation" },
+  { id: "knicks24", name: "Current Knicks", level: "Hard", tags: ["Jalen Brunson", "Karl-Anthony Towns", "Mikal Bridges", "Josh Hart"], style: "Metropolitan Chemistry & Tenacious Post Spacing" },
+  { id: "defenders", name: "All-Time Lockdown", level: "Legend", tags: ["Gary Payton", "Kawhi Leonard", "Ben Wallace", "Scottie Pippen", "Dennis Rodman"], style: "Clamped-up Perimeter & Steel Wall Paint Protection" },
+  { id: "shooters", name: "All-Time Splashtafari", level: "Legend", tags: ["Stephen Curry", "Ray Allen", "Larry Bird", "Kevin Durant", "Reggie Miller"], style: "Lethal Three-point Range & Flawless Court Spacing" }
 ];

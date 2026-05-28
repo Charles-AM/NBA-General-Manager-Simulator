@@ -31,6 +31,10 @@ service cloud.firestore {
         && (!('hasClaimedStarterPack' in data) || data.hasClaimedStarterPack is bool)
         && (!('wins' in data) || data.wins is int)
         && (!('losses' in data) || data.losses is int)
+        && (!('totalGames' in data) || data.totalGames is int)
+        && (!('totalWins' in data) || data.totalWins is int)
+        && (!('totalLosses' in data) || data.totalLosses is int)
+        && (!('lastGameDate' in data) || data.lastGameDate is string)
         && (!('totalMargin' in data) || data.totalMargin is int);
     }
 
@@ -76,6 +80,8 @@ service cloud.firestore {
         && (!('seasonWins' in data) || data.seasonWins is int)
         && (!('seasonLosses' in data) || data.seasonLosses is int)
         && (!('seasonGamesPlayed' in data) || data.seasonGamesPlayed is int)
+        && (!('seasonRecord' in data) || data.seasonRecord is string)
+        && (!('currentSeasonGames' in data) || data.currentSeasonGames is list)
         && (!('teamName' in data) || (data.teamName is string && data.teamName.size() <= 100))
         && (!('starters' in data) || data.starters is list)
         && (!('bench' in data) || data.bench is list)
@@ -117,7 +123,7 @@ service cloud.firestore {
     // Current user has delete privilege to wipe history logs on demand
     match /game_history/{gameId} {
       allow list, get: if isSignedIn() && (resource.data.userId == request.auth.uid || resource.data.opponentId == request.auth.uid);
-      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid && isValidId(gameId);
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid && isValidGameResult(request.resource.data) && isValidId(gameId);
       allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
       allow update: if false; // immutable
     }

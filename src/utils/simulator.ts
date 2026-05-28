@@ -405,11 +405,17 @@ export function simulateGame(
     const shotClockRemaining = randBetween(1, 24);
     const isWindingDown = shotClockRemaining < 5;
     
-    // CPU INTENTIONAL FOUL ON CLOSE LATE GAMES (CPU down late)
-    const isCpuIntentionalFoulNeeded = isLateGameClose && !isUserPossession && opponentScore < userScore;
-    if (isCpuIntentionalFoulNeeded) {
-      // Direct intentional foul to send User to the line and stop clock
-      opponentTeamFouls += 1;
+    // LATE-GAME INTENTIONAL FOUL STRATEGY (Trailing team fouls leading team to stop clock in close games)
+    const isIntentionalFoulNeeded = isLateGameClose && (
+      (isUserPossession && opponentScore < userScore) || // User has ball, CPU is trailing and fouls User
+      (!isUserPossession && userScore < opponentScore)   // CPU has ball, User is trailing and fouls CPU
+    );
+    if (isIntentionalFoulNeeded) {
+      if (isUserPossession) {
+        opponentTeamFouls += 1;
+      } else {
+        userTeamFouls += 1;
+      }
       const previousFouls = playerFoulsMap[defender.name] || 0;
       const totalFouls = previousFouls + 1;
       playerFoulsMap[defender.name] = totalFouls;
@@ -438,7 +444,11 @@ export function simulateGame(
         let ftMsg = "";
         if (ftSuccess) {
           shooter.points += 1;
-          userScore += 1; // Shooter is User, since it's user possession and CPU is fouling User
+          if (isUserPossession) {
+            userScore += 1;
+          } else {
+            opponentScore += 1;
+          }
           ftMsg = `🎯 Pressure Free Throw (${s}/2): ${shooter.name} steps up under immense pressure and sinks the clutch free throw! (+1 point)`;
         } else {
           ftMsg = `❌ Pressure Free Throw (${s}/2): ${shooter.name}'s shot rattles off the iron and misses!`;

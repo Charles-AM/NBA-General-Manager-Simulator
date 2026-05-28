@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Player, PlayerBoxScore, PlayByPlayLog, GameResult } from "../types";
 import { simulateGame } from "../utils/simulator";
-import { PRELOADED_PLAYERS, OPPONENT_TEAMS } from "../data";
-import { Play, ShieldAlert, Award, AlertCircle, CheckCircle, Zap, ShieldCheck, Trophy, RotateCcw, ArrowRight, Star } from "lucide-react";
+import { PRELOADED_PLAYERS, OPPONENT_TEAMS, THEMED_OPPONENT_TEAMS } from "../data";
+import { Play, ShieldAlert, Award, AlertCircle, CheckCircle, Zap, ShieldCheck, Trophy, RotateCcw, ArrowRight, Star, Search, Users } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
 interface SimulationViewProps {
@@ -61,6 +61,8 @@ export default function SimulationView({
   const [gameMode, setGameMode] = useState<50 | 100>(50); // target score
   const [difficulty, setDifficulty] = useState<"Easy" | "Medium" | "Hard" | "Legend">("Medium");
   const [opponentTeamName, setOpponentTeamName] = useState("Crossover Wizards");
+  const [selectedOpponentTeamId, setSelectedOpponentTeamId] = useState<string>("dynamic");
+  const [oppTeamSearchQuery, setOppTeamSearchQuery] = useState("");
 
   // Roster drafted for opponent
   const [opponentStarters, setOpponentStarters] = useState<Player[]>([]);
@@ -100,43 +102,78 @@ export default function SimulationView({
   // Check if roster is complete
   const isRosterComplete = starters.length === 5 && bench.length === 3;
 
-  // Whenever difficulty changes, we automatically re-draft opponents
+  // Whenever difficulty or selected team changes, automatically re-draft
   useEffect(() => {
-    draftOpponent();
-  }, [difficulty]);
+    draftOpponent(selectedOpponentTeamId, difficulty);
+  }, [selectedOpponentTeamId, difficulty]);
 
-  const draftOpponent = () => {
-    // Select opponent names based on difficulty context
-    let names = ["Steve Kerr", "Robert Horry", "Derek Fisher", "Danny Green", "John Paxson", "Muggsy Bogues", "Kyle Korver"];
-    if (difficulty === "Medium") {
-      names = ["Reggie Miller", "Allen Iverson", "Steve Nash", "Dominique Wilkins", "Ray Allen", "Isiah Thomas", "Jayson Tatum", "Shai Gilgeous-Alexander"];
-    } else if (difficulty === "Hard") {
-      names = ["Michael Jordan", "Kobe Bryant", "LeBron James", "Stephen Curry", "Kevin Durant", "Shaquille O'Neal", "Tim Duncan", "Magic Johnson", "Larry Bird", "Nikola Jokić", "Giannis Antetokounmpo"];
-    } else if (difficulty === "Legend") {
-      names = ["Michael Jordan", "Kobe Bryant", "LeBron James", "Stephen Curry", "Kevin Durant", "Shaquille O'Neal", "Tim Duncan", "Magic Johnson", "Larry Bird", "Nikola Jokić", "Giannis Antetokounmpo", "Wilt Chamberlain", "Kareem Abdul-Jabbar", "Luka Dončić"];
+  const draftOpponent = (teamId: string, currentDifficulty: "Easy" | "Medium" | "Hard" | "Legend") => {
+    if (teamId === "dynamic") {
+      let names = ["Steve Kerr", "Robert Horry", "Derek Fisher", "Danny Green", "John Paxson", "Malik Monk", "Kyle Korver"];
+      if (currentDifficulty === "Medium") {
+        names = ["Reggie Miller", "Allen Iverson", "Steve Nash", "Domantas Sabonis", "Ray Allen", "Isiah Thomas", "Jayson Tatum", "Shai Gilgeous-Alexander"];
+      } else if (currentDifficulty === "Hard") {
+        names = ["Michael Jordan", "Kobe Bryant", "LeBron James", "Stephen Curry", "Kevin Durant", "Shaquille O'Neal", "Tim Duncan", "Magic Johnson", "Larry Bird", "Nikola Jokić", "Giannis Antetokounmpo"];
+      } else if (currentDifficulty === "Legend") {
+        names = ["Michael Jordan", "Kobe Bryant", "LeBron James", "Stephen Curry", "Kevin Durant", "Shaquille O'Neal", "Tim Duncan", "Magic Johnson", "Larry Bird", "Nikola Jokić", "Giannis Antetokounmpo", "Tony Parker", "Kareem Abdul-Jabbar", "Luka Dončić"];
+      }
+
+      // Filter PRELOADED_PLAYERS that fit difficulty levels
+      const matched = PRELOADED_PLAYERS.filter(p => {
+        if (currentDifficulty === "Legend") return p.tier.toLowerCase() === "legendary";
+        if (currentDifficulty === "Hard") return p.tier.toLowerCase() === "gold";
+        if (currentDifficulty === "Medium") return p.tier.toLowerCase() === "silver";
+        return p.tier.toLowerCase() === "bronze";
+      });
+      const pool = matched.length >= 8 ? matched : PRELOADED_PLAYERS.filter(p => names.includes(p.name));
+      const finalPool = pool.length >= 8 ? pool : [...PRELOADED_PLAYERS];
+
+      const shuffled = [...finalPool].sort(() => 0.5 - Math.random());
+      const startersOpp = shuffled.slice(0, 5).map(p => ({ ...p, position: p.position }));
+      const benchOpp = shuffled.slice(5, 8).map(p => ({ ...p, position: p.position }));
+
+      setOpponentStarters(startersOpp);
+      setOpponentBench(benchOpp);
+
+      const matchingTeam = OPPONENT_TEAMS.find(t => t.level === currentDifficulty);
+      setOpponentTeamName(matchingTeam ? matchingTeam.name : "Rival Contenders");
+    } else {
+      const themedTeam = THEMED_OPPONENT_TEAMS.find(t => t.id === teamId);
+      if (!themedTeam) return;
+
+      setOpponentTeamName(themedTeam.name);
+
+      // Stars
+      const starPlayers = PRELOADED_PLAYERS.filter(p =>
+        themedTeam.tags.some(tag => p.name.toLowerCase().includes(tag.toLowerCase()))
+      );
+
+      // Filler
+      const teamLevel = themedTeam.level;
+      const matchedFiller = PRELOADED_PLAYERS.filter(p => {
+        if (starPlayers.some(sp => sp.id === p.id)) return false;
+        if (teamLevel === "Legend") return p.tier === "Legendary" || p.tier === "Gold";
+        if (teamLevel === "Hard") return p.tier === "Gold" || p.tier === "Silver";
+        if (teamLevel === "Medium") return p.tier === "Silver" || p.tier === "Bronze";
+        return p.tier === "Bronze";
+      });
+
+      const shuffledFiller = [...matchedFiller].sort(() => 0.5 - Math.random());
+      const fullSquad = [...starPlayers, ...shuffledFiller];
+
+      if (fullSquad.length < 8) {
+        const remainingNeeded = 8 - fullSquad.length;
+        const backupPool = PRELOADED_PLAYERS.filter(p => !fullSquad.some(fs => fs.id === p.id));
+        const extraFillers = [...backupPool].sort(() => 0.5 - Math.random()).slice(0, remainingNeeded);
+        fullSquad.push(...extraFillers);
+      }
+
+      const startersOpp = fullSquad.slice(0, 5);
+      const benchOpp = fullSquad.slice(5, 8);
+
+      setOpponentStarters(startersOpp);
+      setOpponentBench(benchOpp);
     }
-
-    // Filter PRELOADED_PLAYERS that fit our difficulty (Legend maps to Legendary tier)
-    const matched = PRELOADED_PLAYERS.filter(p => {
-      if (difficulty === "Legend") return p.tier.toLowerCase() === "legendary";
-      return p.tier.toLowerCase() === difficulty.toLowerCase();
-    });
-    const pool = matched.length >= 8 ? matched : PRELOADED_PLAYERS.filter(p => names.includes(p.name));
-    
-    // Fallback to any if pool is too small
-    const finalPool = pool.length >= 8 ? pool : [...PRELOADED_PLAYERS];
-
-    // Shuffle and slice
-    const shuffled = [...finalPool].sort(() => 0.5 - Math.random());
-    const startersOpp = shuffled.slice(0, 5).map(p => ({ ...p, position: p.position }));
-    const benchOpp = shuffled.slice(5, 8).map(p => ({ ...p, position: p.position }));
-
-    setOpponentStarters(startersOpp);
-    setOpponentBench(benchOpp);
-
-    // Pick a matching team name
-    const matchingTeam = OPPONENT_TEAMS.find(t => t.level === difficulty);
-    setOpponentTeamName(matchingTeam ? matchingTeam.name : "Rival Contenders");
   };
 
   const handleStartSimulation = async () => {
@@ -207,6 +244,15 @@ export default function SimulationView({
       } else {
         setSimulatedResult(result);
         setStage("results");
+        
+        // Auto-save the completed game result immediately to history and user profiles (FIX A)
+        onSaveGameRecord(result)
+          .then(() => {
+            setIsRecordSaved(true);
+          })
+          .catch((err) => {
+            console.error("Auto-save failed on simulation completion:", err);
+          });
       }
     };
 
@@ -257,69 +303,214 @@ export default function SimulationView({
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 {/* Mode Select */}
                 <div>
                   <label className="text-xs text-gray-400 font-mono uppercase tracking-widest block mb-2">
-                    Game Target Score
+                    🏀 Game Target Score
                   </label>
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       onClick={() => setGameMode(50)}
-                      className={`py-3 px-4 rounded-lg text-xs font-display font-bold uppercase transition-all tracking-wider ${
+                      className={`py-3 px-4 rounded-xl text-xs font-display font-black uppercase transition-all tracking-wider cursor-pointer ${
                         gameMode === 50
                           ? "bg-[#f55a15] text-black shadow-md glow-orange"
-                          : "bg-[#1b2026] text-gray-300 border border-gray-850 hover:bg-gray-800"
+                          : "bg-[#1b2026] text-gray-400 border border-gray-850 hover:bg-gray-800"
                       }`}
                     >
                       First to 50
                     </button>
                     <button
                       onClick={() => setGameMode(100)}
-                      className={`py-3 px-4 rounded-lg text-xs font-display font-bold uppercase transition-all tracking-wider ${
+                      className={`py-3 px-4 rounded-xl text-xs font-display font-black uppercase transition-all tracking-wider cursor-pointer ${
                         gameMode === 100
                           ? "bg-[#f55a15] text-black shadow-md glow-orange"
-                          : "bg-[#1b2026] text-gray-300 border border-gray-850 hover:bg-gray-800"
+                          : "bg-[#1b2026] text-gray-400 border border-gray-850 hover:bg-gray-800"
                       }`}
                     >
-                      Full (First to 100)
+                      Full First to 100
                     </button>
                   </div>
                 </div>
 
-                {/* Difficulty Select */}
+                {/* Difficulty Select for Procedural Matches */}
                 <div>
                   <label className="text-xs text-gray-400 font-mono uppercase tracking-widest block mb-2">
-                    Difficulty Level
+                    ⚙️ Match Difficulty (Dynamic Mode)
                   </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                  <div className="grid grid-cols-4 gap-1.5">
                     {(["Easy", "Medium", "Hard", "Legend"] as const).map((level) => (
                       <button
                         key={level}
-                        onClick={() => setDifficulty(level)}
-                        className={`py-3 rounded-lg text-xs font-display font-bold uppercase transition-all ${
-                          difficulty === level
+                        onClick={() => {
+                          setDifficulty(level);
+                          setSelectedOpponentTeamId("dynamic");
+                        }}
+                        className={`py-3 rounded-xl text-xs font-display font-bold uppercase transition-all cursor-pointer ${
+                          difficulty === level && selectedOpponentTeamId === "dynamic"
                             ? "bg-[#f55a15] text-black shadow-md glow-orange"
-                            : "bg-[#1b2026] text-gray-300 border border-gray-850 hover:bg-gray-850"
+                            : "bg-[#1b2026] text-gray-400 border border-gray-850 hover:bg-gray-850 hover:text-white"
                         }`}
                       >
                         {level}
                       </button>
                     ))}
                   </div>
+                  <p className="text-[10px] text-gray-400 mt-2">Selecting these directly triggers a dynamic procedural opponent squad setup.</p>
+                </div>
+              </div>
+
+              {/* BRAND NEW INTERACTIVE SQUAD SELECT PANEL */}
+              <div className="border-t border-gray-850 pt-6 mb-8 space-y-4">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                  <div>
+                    <h3 className="text-sm font-display font-black uppercase tracking-wider text-white">
+                      🎮 Choose Your Opponent Franchise
+                    </h3>
+                    <p className="text-xs text-gray-400">Select standard procedural setups or iconic legacy & active franchise teams</p>
+                  </div>
+                  <div className="text-xs text-gray-400 bg-[#1b2026] border border-gray-850 px-3.5 py-1.5 rounded-xl font-mono">
+                    Active Target: <strong className="text-[#f55a15]">{opponentTeamName}</strong> ({difficulty})
+                  </div>
                 </div>
 
-                {/* Opponent Selection Details */}
-                <div>
-                  <label className="text-xs text-gray-400 font-mono uppercase tracking-widest block mb-2">
-                    Opposing Franchise Team
-                  </label>
-                  <div className="bg-[#1b2026] border border-gray-850 p-3.5 rounded-lg text-sm flex justify-between items-center text-white">
-                    <span className="font-semibold block truncate pr-2">{opponentTeamName}</span>
-                    <span className="text-[10px] font-mono tracking-wide px-2 py-0.5 bg-gray-850 text-gray-400 rounded">
-                      {difficulty}
-                    </span>
+                {/* Search & Difficulty Quick Filters */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  {/* Search box */}
+                  <div className="relative md:col-span-1">
+                    <input
+                      type="text"
+                      value={oppTeamSearchQuery}
+                      onChange={(e) => setOppTeamSearchQuery(e.target.value)}
+                      placeholder="Search franchises (Bulls, Warriors, Lakers...)"
+                      className="w-full bg-[#1b2026] border border-gray-850 rounded-xl py-2.5 pl-9 pr-4 text-xs text-white focus:outline-none focus:border-[#f55a15] transition-colors"
+                    />
+                    <Search className="absolute left-3 top-3 w-4 h-4 text-gray-500" />
                   </div>
+
+                  {/* Difficulty level quick tabs */}
+                  <div className="flex flex-wrap gap-1.5 md:col-span-2 justify-start md:justify-end">
+                    <button
+                      onClick={() => setOppTeamSearchQuery("")}
+                      className="px-3 py-2 bg-[#1b2026] hover:bg-gray-800 border border-gray-850 text-gray-400 hover:text-white rounded-xl text-xs font-mono font-bold transition-all cursor-pointer"
+                    >
+                      Clear Search
+                    </button>
+                    {(["All", "Easy", "Medium", "Hard", "Legend"] as const).map((lvl) => (
+                      <button
+                        key={lvl}
+                        onClick={() => {
+                          if (lvl === "All") {
+                            setOppTeamSearchQuery("");
+                          } else {
+                            setOppTeamSearchQuery(lvl);
+                          }
+                        }}
+                        className="px-3 py-2 bg-[#1b1f24] hover:bg-gray-800 border border-gray-850 text-gray-300 hover:text-white rounded-xl text-xs font-mono font-bold transition-all cursor-pointer"
+                      >
+                        {lvl} Teams
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Opponent Roster Grid Deck */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-h-[350px] overflow-y-auto pr-1 customize-scrollbar pb-2">
+                  {/* Option 1: Dynamic Random Generated Squad */}
+                  <div
+                    onClick={() => {
+                      setSelectedOpponentTeamId("dynamic");
+                      draftOpponent("dynamic", difficulty);
+                    }}
+                    className={`p-4 rounded-xl border transition-all text-left flex flex-col justify-between cursor-pointer group ${
+                      selectedOpponentTeamId === "dynamic"
+                        ? "bg-[#1b2026]/80 border-[#f55a15] ring-1 ring-[#f55a15]/30 shadow-lg"
+                        : "bg-[#111418] border-gray-850 hover:bg-[#161a1f] hover:border-gray-750"
+                    }`}
+                    style={{ minHeight: "125px" }}
+                  >
+                    <div>
+                      <div className="flex justify-between items-start gap-2">
+                        <span className="text-xs font-display font-black uppercase text-white tracking-wide">Dynamic Rival Selection</span>
+                        <span className="text-[9px] font-mono font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded">
+                          {difficulty} Mode
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-gray-400 mt-1.5 leading-normal">
+                        Randomly compiles balanced, position-compliant basketball contenders matching selected slot tier.
+                      </p>
+                    </div>
+                    <div className="border-t border-gray-850/80 pt-2 mt-3 flex items-center justify-between">
+                      <span className="text-[10px] font-mono text-gray-400 group-hover:text-white transition-colors">🤖 Infinite Variations</span>
+                      <span className="text-[10px] text-amber-500 font-bold group-hover:underline">Procedural Setup</span>
+                    </div>
+                  </div>
+
+                  {/* Option 2+: Themed Legacy Franchises */}
+                  {THEMED_OPPONENT_TEAMS.filter((team) => {
+                    const q = oppTeamSearchQuery.toLowerCase();
+                    return (
+                      team.name.toLowerCase().includes(q) ||
+                      team.style.toLowerCase().includes(q) ||
+                      team.level.toLowerCase().includes(q) ||
+                      team.tags.some((t) => t.toLowerCase().includes(q))
+                    );
+                  }).map((team) => {
+                    const isSelected = selectedOpponentTeamId === team.id;
+                    return (
+                      <div
+                        key={team.id}
+                        onClick={() => {
+                          setSelectedOpponentTeamId(team.id);
+                          setDifficulty(team.level as any);
+                          draftOpponent(team.id, team.level as any);
+                        }}
+                        className={`p-4 rounded-xl border transition-all text-left flex flex-col justify-between cursor-pointer group ${
+                          isSelected
+                            ? "bg-[#1b2026]/80 border-[#f55a15] ring-1 ring-[#f55a15]/30 shadow-lg"
+                            : "bg-[#111418] border-gray-850 hover:bg-[#161a1f] hover:border-gray-750"
+                        }`}
+                        style={{ minHeight: "145px" }}
+                      >
+                        <div>
+                          <div className="flex justify-between items-start gap-1">
+                            <span className="text-xs font-display font-black uppercase text-white tracking-wide truncate pr-1">
+                              {team.name}
+                            </span>
+                            <span
+                              className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border shrink-0 ${
+                                team.level === "Legend"
+                                  ? "bg-red-500/10 text-red-400 border-red-500/20"
+                                  : team.level === "Hard"
+                                  ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                                  : team.level === "Medium"
+                                  ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
+                                  : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                              }`}
+                            >
+                              {team.level}
+                            </span>
+                          </div>
+                          <p className="text-[10px] text-gray-400 italic mt-1.5 leading-normal">
+                            &ldquo;{team.style}&rdquo;
+                          </p>
+                        </div>
+                        <div className="border-t border-gray-850/80 pt-2 mt-3 space-y-1">
+                          <span className="text-[9px] font-mono text-gray-550 block">KEY PLAYERS:</span>
+                          <div className="flex flex-wrap gap-1 leading-none">
+                            {team.tags.slice(0, 3).map((tag, i) => (
+                              <span key={i} className="text-[9px] bg-gray-900 border border-gray-800 text-gray-300 font-sans px-1 py-0.5 rounded">
+                                {tag}
+                              </span>
+                            ))}
+                            {team.tags.length > 3 && (
+                              <span className="text-[9px] text-[#f55a15] font-bold">+{team.tags.length - 3}</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
